@@ -21,14 +21,17 @@
     <div id="all_locations">
     
     <ul id="location-list" data-bind="foreach:locationList">
-        <li> <span data-bind="text: title"></span></li>
+
+        <li data-bind="click: $root.setCurrentLocation"><span data-bind="text: title"></span></li>
     </ul>
     </div>
 
     <div id="main_view" data-bind="with: currentLocation">
      
         <span data-bind="text: addy"></span>
+         
         </div>
+        <div data-bind="text: returnCoordinates"></div>
     <div id="map"></div>
 
     
