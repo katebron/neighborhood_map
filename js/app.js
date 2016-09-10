@@ -5,14 +5,16 @@ initialLocations = [
     description: 'Taco place megan recommended',
     url: 'http://unomastaquiza.com/',
     latitude: 45.5228908,
-    longitude: -122.6926175
+    longitude: -122.6926175,
+    current: false
   },
   {
     title: 'wilson high school',
     addy: '1151 SW Vermont St, Portland, OR 97219 ',
     description: 'high school near old house',
     latitude: 45.4771954,
-    longitude: -122.6920507
+    longitude: -122.6920507,
+    current: false
   },
    {
     title: 'Hale Pele',
@@ -20,7 +22,8 @@ initialLocations = [
     description: 'Tiki bar Megan likes',
     url: 'http://halepele.com/',
     latitude: 45.5352796,
-    longitude: -122.6394542
+    longitude: -122.6394542,
+    current: false
   },
   {
     title: 'Sweedeedee',
@@ -28,7 +31,8 @@ initialLocations = [
     description: 'Small breakfast place. Another Megan pick. Go on a weekday',
     url: 'http://www.sweedeedee.com/',
     latitude: 45.5605478,
-    longitude: -122.6748336
+    longitude: -122.6748336,
+    current: false
   },
 ]
 
@@ -42,6 +46,7 @@ var Location = function(data) {
   this.latitude = ko.observable(data.latitude);
   this.longitude = ko.observable(data.longitude);
   this.url = ko.observable(data.url);
+  this.current = ko.observable(data.current);
   //this.imgAttribution = ko.observable(data.imgAttribution);
 
   //this.nicknames = ko.observableArray(data.nicknames);
@@ -62,11 +67,16 @@ var ViewModel = function() {
   this.currentLocation = ko.observable(this.locationList()[0]);
   
   this.setCurrentLocation = function(clickedLocation) {
+    //make sure other current location is not set to show as well in map
+    self.currentLocation().current(false);
+    //set the new current location
     self.currentLocation(clickedLocation);
-
+    self.currentLocation().current(true);
+   
+    initializeMap();
   }
 
-  self.returnCoordinates = ko.computed(function() {
+  this.returnCoordinates = ko.computed(function() {
        var coordinates = self.currentLocation().latitude() + " by " + self.currentLocation().longitude();   
        return coordinates;
   }); 
@@ -88,25 +98,24 @@ var ViewModel = function() {
 
 }
 
+ 
 
 function initializeMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
-    zoom: 12
+    zoom: 10
   });
-  /*marker = new google.maps.Marker({
-    map: map,
-    draggable: true,
-    animation: google.maps.Animation.DROP,
-    position: {lat: 45.4771954, lng: -122.69},
-    title: "Wilson High School"
-  });*/
- // var contentString = "Wilson high school, where matthew went to school";
-  //var  infowindow = new google.maps.InfoWindow({
-    //      content: contentString
-  //});
+ 
   results = vm.locationsToShow();
-  
+  var locationsSelect = document.getElementById('location-list');
+  google.maps.event.addDomListener(locationsSelect, 'click', function() {
+          google.maps.event.trigger(map, 'redraw'); 
+          console.log('redraw');
+        });
+
+  //current = vm.returnCurrentLocation();
+  //console.log(ko.toJSON(current));
+
   var marker, i, infowindow;
   
   for(i=0; i < results.length; i++ ) {
@@ -119,11 +128,22 @@ function initializeMap() {
       position: latLng,
       map: map,
       title: ko.toJSON(results[i].title)
-    });
     
-    marker.addListener('click', function() {
-      infowindow.open(map, marker);
     });
+    isCurrent = ko.toJSON(results[i].current);
+      
+    if(isCurrent == "true"){
+       
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+
+      }
+
+    //marker.addListener('click', function() {
+      //infowindow.open(map, marker);
+    //});
+
+    
+    
     google.maps.event.addListener(marker, 'click', (function(marker, i) {
       return function() {
         console.log("this is description: " + ko.toJSON(results[i].url));
@@ -132,8 +152,18 @@ function initializeMap() {
         infowindow.open(map, marker);
       }
     })(marker, i));
+
   }
-    //console.log("in a loop: " + results[i])
+  
+
+
+ /* marker.setAnimation(google.maps.Animation.BOUNCE);
+    marker = new google.maps.Marker({
+      position: curLatLng,
+      map: map,
+      title: ko.toJSON(current.title),
+      animation: google.maps.Animation.DROP
+    });*/
 }
 
 
