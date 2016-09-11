@@ -73,7 +73,7 @@ var ViewModel = function() {
     self.currentLocation(clickedLocation);
     self.currentLocation().current(true);
    
-    initializeMap();
+    place_markers();
   }
 
   this.returnCoordinates = ko.computed(function() {
@@ -98,28 +98,27 @@ var ViewModel = function() {
 
 }
 
- 
+var markers = []; 
 
 function initializeMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 10
   });
- 
+  place_markers();
+}
+
+
+
+function place_markers(){
+  clearMarkers();
+  var i;
   results = vm.locationsToShow();
-  var locationsSelect = document.getElementById('location-list');
-  google.maps.event.addDomListener(locationsSelect, 'click', function() {
-          google.maps.event.trigger(map, 'redraw'); 
-          console.log('redraw');
-        });
 
-  //current = vm.returnCurrentLocation();
-  //console.log(ko.toJSON(current));
-
-  var marker, i, infowindow;
-  
   for(i=0; i < results.length; i++ ) {
-    infowindow = new google.maps.InfoWindow({
+    addMarker(results[i]);
+  }  
+    /*infowindow = new google.maps.InfoWindow({
       content: ko.toJSON(results[i].description)
     });
 
@@ -138,9 +137,7 @@ function initializeMap() {
 
       }
 
-    //marker.addListener('click', function() {
-      //infowindow.open(map, marker);
-    //});
+    
 
     
     
@@ -153,19 +150,40 @@ function initializeMap() {
       }
     })(marker, i));
 
-  }
+  } */
   
-
-
- /* marker.setAnimation(google.maps.Animation.BOUNCE);
-    marker = new google.maps.Marker({
-      position: curLatLng,
-      map: map,
-      title: ko.toJSON(current.title),
-      animation: google.maps.Animation.DROP
-    });*/
 }
 
+function addMarker(location){
+  var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
+  var infoWindow = new google.maps.InfoWindow({
+    content: ko.toJSON(location.description),
+  });
+  console.log("this is latitude in addmarker: " + ko.toJSON(location.latitude));
+  var marker;
+   var marker = new google.maps.Marker({
+    position: latLng,
+    map: map,
+  });
+  markers.push(marker); 
+
+  if(ko.toJSON(location.current) == "true"){
+    infoWindow.open(marker.get('map'), marker);
+  }
+
+ 
+  marker.addListener('click', function(){
+    infoWindow.open(marker.get('map'), marker);
+  });
+  
+} 
+
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+  markers = [];
+}
 
 var vm = new ViewModel();
 ko.applyBindings(vm);
