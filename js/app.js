@@ -6,12 +6,14 @@ initialLocations = [
     url: 'http://unomastaquiza.com/',
     latitude: 45.5228908,
     longitude: -122.6926175,
+    genre: 'food',
     current: false
   },
   {
     title: 'wilson high school',
     addy: '1151 SW Vermont St, Portland, OR 97219 ',
     description: 'high school near old house',
+    genre: 'nostalgia',
     latitude: 45.4771954,
     longitude: -122.6920507,
     current: false
@@ -21,6 +23,7 @@ initialLocations = [
     addy: '2733 NE Broadway St, Portland, OR 97232',
     description: 'Tiki bar Megan likes',
     url: 'http://halepele.com/',
+    genre: 'bar',
     latitude: 45.5352796,
     longitude: -122.6394542,
     current: false
@@ -30,6 +33,7 @@ initialLocations = [
     addy: '5202 N. Albina Ave, Portland, OR 97217',
     description: 'Small breakfast place. Another Megan pick. Go on a weekday',
     url: 'http://www.sweedeedee.com/',
+    genre: 'food',
     latitude: 45.5605478,
     longitude: -122.6748336,
     current: false
@@ -46,6 +50,7 @@ var Location = function(data) {
   this.latitude = ko.observable(data.latitude);
   this.longitude = ko.observable(data.longitude);
   this.url = ko.observable(data.url);
+  this.genre = ko.observable(data.genre);
   this.current = ko.observable(data.current);
   //this.imgAttribution = ko.observable(data.imgAttribution);
 
@@ -65,6 +70,7 @@ var ViewModel = function() {
   // use self whenever you want to get to the outer "this" in a
   // nested function like below. 
   this.currentLocation = ko.observable(this.locationList()[0]);
+  this.typeToShow = ko.observable("all");
   
   this.setCurrentLocation = function(clickedLocation) {
     //make sure other current location is not set to show as well in map
@@ -82,19 +88,13 @@ var ViewModel = function() {
   }); 
 
   this.locationsToShow = ko.pureComputed(function() {
-    return self.locationList();
-  }, this);   
-  
-  
-
-  //this.incrementCounter = function (clickedCat) {
-   // self.currentCat().clickCount(self.currentCat().clickCount() + 1);
-   //};
- //when you click it passes in an object
-  //this.setCurrentCat = function(clickedCat) {
-    //self.currentCat(clickedCat);
-  //}
-
+    var desiredType = this.typeToShow();
+        if (desiredType == "all") return this.locationList();
+        return ko.utils.arrayFilter(this.locationList(), function(locale) {
+          console.log("this is locale.genre " + ko.toJSON(locale.genre));
+            return locale.genre() === desiredType;
+        });
+    }, this);
 
 }
 
@@ -118,40 +118,6 @@ function place_markers(){
   for(i=0; i < results.length; i++ ) {
     addMarker(results[i]);
   }  
-    /*infowindow = new google.maps.InfoWindow({
-      content: ko.toJSON(results[i].description)
-    });
-
-    var latLng = new google.maps.LatLng(ko.toJSON(results[i].latitude),ko.toJSON(results[i].longitude));
-    marker = new google.maps.Marker({
-      position: latLng,
-      map: map,
-      title: ko.toJSON(results[i].title)
-    
-    });
-    isCurrent = ko.toJSON(results[i].current);
-      
-    if(isCurrent == "true"){
-       
-          marker.setAnimation(google.maps.Animation.BOUNCE);
-
-      }
-
-    
-
-    
-    
-    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-      return function() {
-        console.log("this is description: " + ko.toJSON(results[i].url));
-        content = '<strong><a href="' + ko.toJSON(results[i].url) + '">' + ko.toJSON(results[i].title) + '</a></strong><br/>' + ko.toJSON(results[i].description);
-        infowindow.setContent(content);
-        infowindow.open(map, marker);
-      }
-    })(marker, i));
-
-  } */
-  
 }
 
 function addMarker(location){
@@ -159,7 +125,6 @@ function addMarker(location){
   var infoWindow = new google.maps.InfoWindow({
     content: ko.toJSON(location.description),
   });
-  console.log("this is latitude in addmarker: " + ko.toJSON(location.latitude));
   var marker;
    var marker = new google.maps.Marker({
     position: latLng,

@@ -20,12 +20,20 @@
     <h1>All Locations</h1>
     <div id="all_locations">
     
+    <p>
+    Show:
+    <label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label>
+    <label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' />Food</label>
+    <label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' />Bars</label>
+    <label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' />Nostalgia</label>
+</p>
+
     <ul id="location-list" data-bind="foreach:locationsToShow">
 
-        <li data-bind="click: $root.setCurrentLocation"><span data-bind="text: title"></span></li>
+        <li data-bind="click: $root.setCurrentLocation"><span data-bind="text: title"></span> (<span data-bind="text: genre"></span>)</li>
     </ul>
     </div>
-
+    
     <div id="main_view" data-bind="with: currentLocation">
      
         <span data-bind="text: addy"></span>
