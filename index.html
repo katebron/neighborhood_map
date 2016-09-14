@@ -3,20 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Locations</title>
-     <style>
-      html, body {
-        height: 100%;
-        background: orange;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        background-color: red;
-        height: 100%;
-      }
-    </style>
+     <link href="css/styles.css" rel=stylesheet /> 
 </head>
 <body>
+    <div id='main'>
     <h1>All Locations</h1>
     <div id="all_locations">
     
@@ -41,6 +31,7 @@
         </div>
         <h3>Coordinates</h3>
         <div data-bind="text: returnCoordinates"></div>
+    </div><!--end main ui-->
     <div id="map"></div>
 
     
