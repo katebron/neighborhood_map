@@ -67,6 +67,7 @@ var ViewModel = function() {
     self.locationList.push(new Location(place));
      
   });
+  self.query = ko.observable('');
 
   // use self whenever you want to get to the outer "this" in a
   // nested function like below. 
@@ -83,12 +84,17 @@ var ViewModel = function() {
     place_markers();
   }
   
-  this.returnCoordinates = ko.computed(function() {
+  /*this.returnCoordinates = ko.computed(function() {
        var coordinates = self.currentLocation().latitude() + " by " + self.currentLocation().longitude();   
        return coordinates;
-  }); 
+  }); */
 
   this.locationsToShow = ko.pureComputed(function() {
+    var search = this.query().toLowerCase();
+    if (search != "") return ko.utils.arrayFilter(this.locationList(), function (locale) {
+        return locale.title().toLowerCase().indexOf(search) >= 0;
+      });
+    
     var desiredType = this.typeToShow();
         if (desiredType == "all") return this.locationList();
         return ko.utils.arrayFilter(this.locationList(), function(locale) {
@@ -101,18 +107,11 @@ var ViewModel = function() {
     place_markers();
   });
 
-
- /* this.locationsToShow.subscribe(function() {
-    place_markers();
-  }, this, "awake")
-  */
+  //this.query.subscribe(search);
 }
 
 var markers = []; 
 
-//vm.locationsToShow.subscribe(function(newValue){
-  //alert('location list has changed');
-//});
 
 function initializeMap() {
   map = new google.maps.Map(document.getElementById('map'), {

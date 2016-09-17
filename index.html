@@ -17,6 +17,8 @@
     <label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' />Bars</label>
     <label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' />Nostalgia</label>
 </p>
+Find a place by name
+<input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 
     <ul id="location-list" data-bind="foreach:locationsToShow">
 
@@ -29,8 +31,7 @@
         <span data-bind="text: addy"></span>
          
         </div>
-        <h3>Coordinates</h3>
-        <div data-bind="text: returnCoordinates"></div>
+       
     </div><!--end main ui-->
     <div id="map"></div>
 
