@@ -10,10 +10,10 @@ html, body {
 
 @media all and (min-width: 500px) {
   #main {
-    width: 25vw;
+    width: 30vw;
     height: 100vh;
     float: left;
     background-color: gray;
     padding-left: 1em; }
   #map {
-    width: calc(75vw -1em); } }
+    width: calc(70vw -1em); } }

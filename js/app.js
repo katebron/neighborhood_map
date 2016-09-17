@@ -67,6 +67,7 @@ var ViewModel = function() {
     self.locationList.push(new Location(place));
      
   });
+
   // use self whenever you want to get to the outer "this" in a
   // nested function like below. 
   this.currentLocation = ko.observable(this.locationList()[0]);
@@ -81,7 +82,7 @@ var ViewModel = function() {
    
     place_markers();
   }
-
+  
   this.returnCoordinates = ko.computed(function() {
        var coordinates = self.currentLocation().latitude() + " by " + self.currentLocation().longitude();   
        return coordinates;
@@ -96,9 +97,22 @@ var ViewModel = function() {
         });
     }, this);
 
+  this.locationsToShow.subscribe(function(newValue) {
+    place_markers();
+  });
+
+
+ /* this.locationsToShow.subscribe(function() {
+    place_markers();
+  }, this, "awake")
+  */
 }
 
 var markers = []; 
+
+//vm.locationsToShow.subscribe(function(newValue){
+  //alert('location list has changed');
+//});
 
 function initializeMap() {
   map = new google.maps.Map(document.getElementById('map'), {
