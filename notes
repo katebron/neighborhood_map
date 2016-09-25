@@ -1,0 +1,32 @@
+http://api.geonames.org/neighbourhood?lat=45.5605478&lng=-122.6748336&username=katebron&style=full
+
+http://api.geonames.org/findNearbyWikipedia?lat=45.5605478&lng=-122.6748336&username=katebron
+
+https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=10000&gscoord=45.5605478|-122.6748336
+
+OR
+
+https://dev.twitter.com/rest/reference/get/geo/search
+
+
+FLICKR:
+Done! Here's the API key and secret for your new app:
+
+	Neighborhood Map Project
+Key:
+0ba16f70231cf1f8e6b825dfa87343d2
+
+Secret:
+be593a8129d65cf7
+
+Edit app details - Edit auth flow for this app - View all Apps by You
+
+https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=0ba16f70231cf1f8e6b825dfa87343d2&lat=45.4771954&lon=-122.6920507&radius=1&format=json&nojsoncallback=1
+
+ 
+https://farm9.staticflickr.com/8110/29818953435_11e9fbf2e1_m.jpg
+
+{"id":"29818953435","owner":"136842606@N02","secret":"11e9fbf2e1","server":"8110","farm":9,"title":"Time \ud83d\udd5d","ispublic":1,"isfriend":0,"isfamily":0},
+
+
+https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=0ba16f70231cf1f8e6b825dfa87343d2&lat=45.4771954&lon=-122.6920507&radius=1&page=1&format=json&nojsoncallback=1

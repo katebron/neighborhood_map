@@ -1,6 +1,6 @@
 html, body {
 height: 100%;
-background: black;
+background: gray;
 margin: 0;
 padding: 0;
 }
@@ -10,14 +10,19 @@ height: 100%;
 }
 @media all and (min-width: 500px){
 	#main{
-		
-       width: 30vw;
+	   display: inline-block;
+       width: 30%;
        height: 100vh;
        float: left;
        background-color: gray;
        padding-left: 1em;
+       margin-right: 0;
 	}
 	#map{
-	  width: calc(70vw -1em);
+		display: inline-block;
+     
+      margin-left: 0;
+	  width: 65%;
+	  float: right;
 	}
 }

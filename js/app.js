@@ -1,42 +1,49 @@
+ 
+
 initialLocations = [
  {
     title: 'Uno Mas taquiza',
-    addy: '1914 W. Burnside',
+    address: '1914 W. Burnside',
     description: 'Taco place megan recommended',
     url: 'http://unomastaquiza.com/',
     latitude: 45.5228908,
     longitude: -122.6926175,
     genre: 'food',
-    current: false
+    current: false,
+    images: []
+
   },
   {
     title: 'wilson high school',
-    addy: '1151 SW Vermont St, Portland, OR 97219 ',
+    address: '1151 SW Vermont St, Portland, OR 97219 ',
     description: 'high school near old house',
     genre: 'nostalgia',
     latitude: 45.4771954,
     longitude: -122.6920507,
-    current: false
+    current: false,
+    images: []
   },
    {
     title: 'Hale Pele',
-    addy: '2733 NE Broadway St, Portland, OR 97232',
+    address: '2733 NE Broadway St, Portland, OR 97232',
     description: 'Tiki bar Megan likes',
     url: 'http://halepele.com/',
     genre: 'bar',
     latitude: 45.5352796,
     longitude: -122.6394542,
-    current: false
+    current: false,
+    images: []
   },
   {
     title: 'Sweedeedee',
-    addy: '5202 N. Albina Ave, Portland, OR 97217',
+    address: '5202 N. Albina Ave, Portland, OR 97217',
     description: 'Small breakfast place. Another Megan pick. Go on a weekday',
     url: 'http://www.sweedeedee.com/',
     genre: 'food',
     latitude: 45.5605478,
     longitude: -122.6748336,
-    current: false
+    current: false,
+    images: []
   },
 ]
 
@@ -45,13 +52,14 @@ var Location = function(data) {
   //this.clickCount = ko.observable(data.clickCount);
   
   this.title = ko.observable(data.title);
-  this.addy = ko.observable(data.addy);
+  this.address = ko.observable(data.address);
   this.description = ko.observable(data.description);
   this.latitude = ko.observable(data.latitude);
   this.longitude = ko.observable(data.longitude);
   this.url = ko.observable(data.url);
   this.genre = ko.observable(data.genre);
   this.current = ko.observable(data.current);
+  this.images = ko.observableArray([]);
   //this.imgAttribution = ko.observable(data.imgAttribution);
 
   //this.nicknames = ko.observableArray(data.nicknames);
@@ -80,14 +88,25 @@ var ViewModel = function() {
     //set the new current location
     self.currentLocation(clickedLocation);
     self.currentLocation().current(true);
-   
     place_markers();
   }
   
-  /*this.returnCoordinates = ko.computed(function() {
-       var coordinates = self.currentLocation().latitude() + " by " + self.currentLocation().longitude();   
-       return coordinates;
-  }); */
+  this.getImages = ko.computed(function(clickedLocation) {
+   var lat = self.currentLocation().latitude();
+   var long = self.currentLocation().longitude();   
+   var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
+   var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page=0&per_page=5&format=json&nojsoncallback=1';
+   $.getJSON(flickr_url, function(data){
+    $.each(data.photos.photo, function(i,item){
+        src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
+        self.currentLocation().images.push(src);
+        
+    });
+    
+   });
+   //console.log("this is images: " + self.currentLocation().images());
+   return self.currentLocation().images();
+  }) 
 
   this.locationsToShow = ko.pureComputed(function() {
     var search = this.query().toLowerCase();
@@ -109,6 +128,14 @@ var ViewModel = function() {
 
   //this.query.subscribe(search);
 }
+
+/*function getPhotos(location) {
+  var lat = ko.toJSON(location.latitude);
+  var long = ko.toJSON(location.longitude);
+  
+  })
+
+}*/
 
 var markers = []; 
 
