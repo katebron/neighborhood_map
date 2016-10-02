@@ -59,23 +59,38 @@ var Location = function(data) {
   this.url = ko.observable(data.url);
   this.genre = ko.observable(data.genre);
   this.current = ko.observable(data.current);
-  this.images = ko.observableArray([]);
+  this.images = ko.observableArray();
+
   //this.imgAttribution = ko.observable(data.imgAttribution);
 
   //this.nicknames = ko.observableArray(data.nicknames);
 
+  //});
 }
+
+/*var Img = function(data) {
+  //this.title = ko.observable(result.title);
+  this.src = ko.observable(result.src);
+}*/
+
+
 
 var ViewModel = function() {
   var self = this;
 
   this.locationList = ko.observableArray([]);
+
   this.images = ko.observableArray([]);
 
   initialLocations.forEach(function(place){
     self.locationList.push(new Location(place));
      
   });
+
+  /*imagesForLocation.forEach(function(location){
+    self.images.push(new)
+  })*/
+
   self.query = ko.observable('');
 
   // use self whenever you want to get to the outer "this" in a
@@ -90,25 +105,10 @@ var ViewModel = function() {
     self.currentLocation(clickedLocation);
     self.currentLocation().current(true);
     place_markers();
+    get_images(self.currentLocation().latitude(), self.currentLocation().longitude());
   }
   
-  this.getImages = ko.computed(function(clickedLocation) {
-   self.images.removeAll();
-   var lat = self.currentLocation().latitude();
-   var long = self.currentLocation().longitude();   
-   var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
-   var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page=0&per_page=5&format=json&nojsoncallback=1';
-   $.getJSON(flickr_url, function(data){
-    $.each(data.photos.photo, function(i,item){
-        src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
-        self.images.push(src);
-        
-    });
-    
-   });
-   //console.log("this is images: " + self.currentLocation().images());
-   return self.currentLocation().images();
-  }) 
+ 
 
   this.locationsToShow = ko.pureComputed(function() {
     var search = this.query().toLowerCase();
@@ -190,6 +190,23 @@ function clearMarkers() {
     markers[i].setMap(null);
   }
   markers = [];
+}
+
+function get_images(lat, long) {
+   var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
+   var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page=0&per_page=5&format=json&nojsoncallback=1';
+   $.getJSON(flickr_url, function(data){
+    $.each(data.photos.photo, function(i,item){
+        src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
+        vm.images().push(src);
+        
+        console.log("this is src: " + src);
+        
+    });
+    console.dir(vm.images());
+   });
+   //console.log("this is images: " + self.currentLocation().images());
+   //return self.currentLocation().images();
 }
 
 var vm = new ViewModel();

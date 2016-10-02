@@ -28,7 +28,7 @@ Find a place by name
     
     <div id="main_view" data-bind="with: currentLocation">
      
-        <span data-bind="text: address"></span>
+        <span data-bind="text: address"></span> 
          <!--<ul data-bind="foreach: $root.images">-->
         
         
@@ -38,7 +38,7 @@ Find a place by name
          </ul>
             
          <h3>Flickr</h3>
-        <ul data-bind="foreach:getImages"> <!---data-bind="foreach: getImages"-->
+        <ul data-bind="foreach:images"> <!---data-bind="foreach: getImages"-->
             
             <li><img data-bind="attr:{src: $data}" /></li> 
             <!--<li data-bind="text: $data"></li>-->
