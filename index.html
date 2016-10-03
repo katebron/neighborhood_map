@@ -26,25 +26,24 @@ Find a place by name
     </ul>
     </div>
     
-    <div id="main_view" data-bind="with: currentLocation">
+    <div id="address" data-bind="with: currentLocation">
      
         <span data-bind="text: address"></span> 
          <!--<ul data-bind="foreach: $root.images">-->
         
         
         </div>
-        <ul data-bind="foreach:Location">
-         <li data-bind="text:$data">
-         </ul>
-            
-         <h3>Flickr</h3>
-        <ul data-bind="foreach:images"> <!---data-bind="foreach: getImages"-->
-            
-            <li><img data-bind="attr:{src: $data}" /></li> 
-            <!--<li data-bind="text: $data"></li>-->
-
-         </ul>   
+        
+        <div id = "photos">    
+         <h3>Flickr Photos from around this neighborhood</h3>
+        <div id = "flickr_imgs" data-bind="foreach:images"> <!---data-bind="foreach: getImages"-->
+            <div class="flickr_img_wrap">
+           <img data-bind="attr:{src: $data}" />
+           </div>
+         </div>
+       </div>     
     </div><!--end main ui-->
+
     <div id="map"></div>
 
     

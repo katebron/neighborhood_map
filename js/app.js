@@ -10,8 +10,6 @@ initialLocations = [
     longitude: -122.6926175,
     genre: 'food',
     current: false,
-    images: []
-
   },
   {
     title: 'wilson high school',
@@ -21,7 +19,6 @@ initialLocations = [
     latitude: 45.4771954,
     longitude: -122.6920507,
     current: false,
-    images: []
   },
    {
     title: 'Hale Pele',
@@ -32,7 +29,6 @@ initialLocations = [
     latitude: 45.5352796,
     longitude: -122.6394542,
     current: false,
-    images: []
   },
   {
     title: 'Sweedeedee',
@@ -43,14 +39,11 @@ initialLocations = [
     latitude: 45.5605478,
     longitude: -122.6748336,
     current: false,
-    images: []
   },
 ]
 
 
-var Location = function(data) {
-  //this.clickCount = ko.observable(data.clickCount);
-  
+var Location = function(data) {  
   this.title = ko.observable(data.title);
   this.address = ko.observable(data.address);
   this.description = ko.observable(data.description);
@@ -59,11 +52,6 @@ var Location = function(data) {
   this.url = ko.observable(data.url);
   this.genre = ko.observable(data.genre);
   this.current = ko.observable(data.current);
-  this.images = ko.observableArray([]);
-  //this.imgAttribution = ko.observable(data.imgAttribution);
-
-  //this.nicknames = ko.observableArray(data.nicknames);
-
 }
 
 var ViewModel = function() {
@@ -98,16 +86,32 @@ var ViewModel = function() {
    var long = self.currentLocation().longitude();   
    var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
    var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page=0&per_page=5&format=json&nojsoncallback=1';
-   $.getJSON(flickr_url, function(data){
+   $.ajax({
+    type: "GET",
+    url: flickr_url,
+    success: function(data){
+        $(data.photos.photo).each(function(i,item){
+        src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
+        self.images.push(src);
+        });
+      },
+    error: function(){
+      $('#photos').append("<em>Temporarily unable to pull from the flickr API</em>");
+      //what to do here?
+    }
+    });
+
+
+   /*$.getJSON(flickr_url, function(data){
     $.each(data.photos.photo, function(i,item){
         src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
         self.images.push(src);
         
     });
     
-   });
+   });*/
    //console.log("this is images: " + self.currentLocation().images());
-   return self.currentLocation().images();
+  // return self.currentLocation().images();
   }) 
 
   this.locationsToShow = ko.pureComputed(function() {
