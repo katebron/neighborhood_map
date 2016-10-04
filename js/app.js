@@ -243,7 +243,7 @@ function place_markers(){
 
 function addMarker(location){
   var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
-  var desc = ko.toJSON(location.title) + "<br/> " + ko.toJSON(location.description); 
+  var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.description); 
   var infoWindow = new google.maps.InfoWindow({
     content: desc,
   });
