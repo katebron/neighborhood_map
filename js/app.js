@@ -40,6 +40,86 @@ initialLocations = [
     longitude: -122.6748336,
     current: false,
   },
+  {
+    title: 'Little Bird Bistro',
+    address: '215 SW 6th Ave, Portland, OR 97204',
+    description: 'Jess pick',
+    url: 'http://littlebirdbistro.com/',
+    genre: 'food',
+    latitude: 45.522229,
+    longitude: -122.677192,
+    current: false,
+  },
+   {
+    title: 'Farm Spirit PDX',
+    address: '1414 SE Morrison StreetPortland OR 97202',
+    description: 'Jess pick. \'Aka Portlands most refined vegetable-focused restaurant yet\'',
+    url: 'http://farmspiritpdx.com/',
+    genre: 'food',
+    latitude: 45.517108,
+    longitude: -122.651217,
+    current: false,
+  },
+   {
+    title: 'Toro Bravo',
+    address: '120 NE Russell St Portland, OR, 97212',
+    description: 'Jess pick',
+    url: 'http://www.torobravopdx.com/',
+    genre: 'food',
+    latitude: 45.517108,
+    longitude: -122.651217,
+    current: false,
+  },
+  {
+    title: 'Nuestra Concina',
+    address: '2135 SE Division Street Portland, OR 97202',
+    description: 'Jess pick',
+    url: 'http://nuestracocina.com/',
+    genre: 'food',
+    latitude: 45.505052,
+    longitude: -122.643843,
+    current: false,
+  },
+ {
+    title: 'Tasty n Alder',
+    address: '580 SW 12th Ave, Portland, OR, 97205',
+    description: 'Jess pick: \"i can\'t eat much here but it look good and i\'m sure that i could find something to eat\"',
+    url: 'http://www.tastynalder.com/',
+    genre: 'food',
+    latitude: 45.521341,
+    longitude: -122.683477,
+    current: false,
+  },
+   {
+    title: 'Mediterranean Exploration Company',
+    address: '333 NW 13th Ave, Portland OR 97209',
+    description: 'Jess pick: "even if not on your bday, i\'d like to go here one night "',
+    url: 'http://www.tastynalder.com/',
+    genre: 'food',
+    latitude: 45.521341,
+    longitude: -122.683477,
+    current: false,
+  },
+  {
+    title: 'Sauce Box',
+    address: '214 sw broadway, portland, or 97205',
+    description: "From Kris: \'I think this is where i went with Katie\'",
+    url: 'http://www.saucebox.com/',
+    genre: 'bar',
+    latitude: 45.522696,
+    longitude: -122.678183,
+    current: false,
+  },
+   {
+    title: 'Longfellows',
+    address: '1401 SE Division St, Portland, OR 97202',
+    description: "Mainstay for classic titles, first editions, fine bindings, rare periodicals, posters & ephemera.",
+    url: 'http://www.saucebox.com/',
+    genre: 'bookstore',
+    latitude: 45.505030,
+    longitude: -122.651610,
+    current: false,
+  },
 ]
 
 
@@ -91,13 +171,12 @@ var ViewModel = function() {
     url: flickr_url,
     success: function(data){
         $(data.photos.photo).each(function(i,item){
-        src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
+        src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
         self.images.push(src);
         });
       },
     error: function(){
       $('#photos').append("<em>Temporarily unable to pull from the flickr API</em>");
-      //what to do here?
     }
     });
   }) 
@@ -130,7 +209,7 @@ var markers = [];
 window.initializeMap = function() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
-    zoom: 10
+    zoom: 12
   });
 
   place_markers();
