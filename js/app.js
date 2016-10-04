@@ -100,18 +100,6 @@ var ViewModel = function() {
       //what to do here?
     }
     });
-
-
-   /*$.getJSON(flickr_url, function(data){
-    $.each(data.photos.photo, function(i,item){
-        src = "http://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
-        self.images.push(src);
-        
-    });
-    
-   });*/
-   //console.log("this is images: " + self.currentLocation().images());
-  // return self.currentLocation().images();
   }) 
 
   this.locationsToShow = ko.pureComputed(function() {
@@ -132,29 +120,27 @@ var ViewModel = function() {
     place_markers();
   });
 
-  //this.query.subscribe(search);
+ 
 }
 
-/*function getPhotos(location) {
-  var lat = ko.toJSON(location.latitude);
-  var long = ko.toJSON(location.longitude);
-  
-  })
-
-}*/
 
 var markers = []; 
 
 
-function initializeMap() {
+window.initializeMap = function() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 10
   });
+
   place_markers();
 }
 
-
+setTimeout(function(){
+ if(!window.google || !window.google.maps) {
+    $('#map').html('<span class="error">Our apologies, Google Maps isn\'t working at the moment for us</span>');
+  }
+}, 1000);
 
 function place_markers(){
   clearMarkers();
@@ -197,7 +183,5 @@ function clearMarkers() {
 }
 
 var vm = new ViewModel();
-ko.applyBindings(vm);
+  ko.applyBindings(vm);
 
-
-//ko.applyBindings(new ViewModel());

@@ -10,6 +10,15 @@ padding-bottom: 12em;
  	font-size: normal;
  }
 }
+.error{
+ background-color: #ececec;
+ padding: 2em;
+ display: inline-block;
+ font-style: italic;
+ position: absolute;
+ top: 20%;
+ right: 20%;
+}
 #map {
 height: 50vh;
 }
