@@ -1,6 +1,16 @@
  
 
 initialLocations = [
+{
+    title: 'Air b&b',
+    address: '745 NE Sumner St, Portland OR 97211',
+    description: 'Here!',
+    url: 'https://www.airbnb.com',
+    latitude: 45.560812,
+    longitude: -122.657447,
+    genre: 'lodging',
+    current: false,
+  },
  {
     title: 'Uno Mas taquiza',
     address: '1914 W. Burnside',
@@ -53,7 +63,7 @@ initialLocations = [
    {
     title: 'Farm Spirit PDX',
     address: '1414 SE Morrison StreetPortland OR 97202',
-    description: 'Jess pick. \'Aka Portlands most refined vegetable-focused restaurant yet\'',
+    description: 'Jess pick: Aka Portlands most refined vegetable-focused restaurant yet',
     url: 'http://farmspiritpdx.com/',
     genre: 'food',
     latitude: 45.517108,
@@ -83,7 +93,7 @@ initialLocations = [
  {
     title: 'Tasty n Alder',
     address: '580 SW 12th Ave, Portland, OR, 97205',
-    description: 'Jess pick: \"i can\'t eat much here but it look good and i\'m sure that i could find something to eat\"',
+    description: 'Jess pick: i can\'t eat much here but it look good and i\'m sure that i could find something to eat',
     url: 'http://www.tastynalder.com/',
     genre: 'food',
     latitude: 45.521341,
@@ -93,7 +103,7 @@ initialLocations = [
    {
     title: 'Mediterranean Exploration Company',
     address: '333 NW 13th Ave, Portland OR 97209',
-    description: 'Jess pick: "even if not on your bday, i\'d like to go here one night "',
+    description: 'Jess pick: even if not on your bday, i\'d like to go here one night',
     url: 'http://www.tastynalder.com/',
     genre: 'food',
     latitude: 45.521341,
@@ -103,7 +113,7 @@ initialLocations = [
   {
     title: 'Sauce Box',
     address: '214 sw broadway, portland, or 97205',
-    description: "From Kris: \'I think this is where i went with Katie\'",
+    description: "From Kris: I think this is where i went with Katie",
     url: 'http://www.saucebox.com/',
     genre: 'bar',
     latitude: 45.522696,
