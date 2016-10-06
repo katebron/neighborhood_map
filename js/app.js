@@ -1,4 +1,4 @@
- 
+
 
 initialLocations = [
 {
@@ -192,24 +192,27 @@ var ViewModel = function() {
   }) 
 
   this.locationsToShow = ko.pureComputed(function() {
+    var locations = this.locationList();
     var search = this.query().toLowerCase();
-    if (search != "") return ko.utils.arrayFilter(this.locationList(), function (locale) {
-        return locale.title().toLowerCase().indexOf(search) >= 0;
+    if (search) {
+        locations = ko.utils.arrayFilter(results, function(locale){
+          return (locale.title().toLowerCase().indexOf(search) >= 0);
       });
-    
+    }
     var desiredType = this.typeToShow();
-        if (desiredType == "all") return this.locationList();
-        return ko.utils.arrayFilter(this.locationList(), function(locale) {
-          console.log("this is locale.genre " + ko.toJSON(locale.genre));
-            return locale.genre() === desiredType;
-        });
-    }, this);
+    if (desiredType && desiredType != 'all'){
+      locations =  ko.utils.arrayFilter(locations, function(locale) {
+      //console.log("this is locale.genre " + ko.toJSON(locale.genre));
+        return locale.genre() === desiredType;
+      });
+    } 
+    
+    return locations;
+  }, this);  
 
   this.locationsToShow.subscribe(function(newValue) {
     place_markers();
-  });
-
- 
+  }); 
 }
 
 
