@@ -44,30 +44,19 @@ ul#location-list {
 #address {
   padding: 0 1em 1em 1em; }
 
-#photos {
-  position: absolute;
-  bottom: 0;
-  width: 90vw;
-  height: 200px;
-  padding-left: 3vw; }
+.loc_info {
+  height: 100%; }
 
-#flickr_imgs {
-  display: flex;
-  background-color: black;
-  flex-wrap: wrap;
-  flex-flow: space-around;
-  margin-bottom: 1em;
-  position: relative; }
-  #flickr_imgs .flickr_img_wrap {
-    display: inline-block;
-    width: calc(25% - 0.5em);
-    height: 25%;
-    padding: 0.25em; }
-    #flickr_imgs .flickr_img_wrap img {
-      width: 100%; }
+#photos {
+  display: none; }
 
 @media all and (min-width: 650px) {
   #main {
+    padding: 0;
+    margin: 0; }
+    #main h1 {
+      padding: 0 0 0.5em 0.5em; }
+  #all_locations {
     display: inline-block;
     width: 30%;
     height: 100vh;
@@ -79,22 +68,41 @@ ul#location-list {
     display: inline-block;
     margin-left: 0;
     width: 65%;
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
     height: 100vh;
     margin-left: 1em; }
   #photos {
+    display: block;
     position: relative;
     width: 100%;
-    padding-left: 0; }
-  #flickr_imgs .flickr_img_wrap {
-    width: calc(50% - 0.5em);
-    height: 50%; } }
+    padding-left: 0;
+    height: 100%; }
+  #flickr_imgs {
+    display: flex;
+    background-color: black;
+    flex-wrap: wrap;
+    flex-flow: space-around;
+    margin-bottom: 1em;
+    position: relative; }
+    #flickr_imgs .flickr_img_wrap {
+      display: inline-block;
+      width: calc(25% - 0.5em);
+      height: 10%;
+      padding: 0.25em; }
+      #flickr_imgs .flickr_img_wrap img {
+        width: 100%; } }
+
+.not-visible {
+  visibility: hidden;
+  font-size: 1px; }
 
 /*FROM ICOMOON*/
 @font-face {
   font-family: 'icomoon';
-  src: url("../fonts/icomoon.eot?42dnun");
-  src: url("../fonts/icomoon.eot?42dnun#iefix") format("embedded-opentype"), url("../fonts/icomoon.ttf?42dnun") format("truetype"), url("../fonts/icomoon.woff?42dnun") format("woff"), url("../fonts/icomoon.svg?42dnun#icomoon") format("svg");
+  src: url("../fonts/icomoon.eot?ju5hpk");
+  src: url("../fonts/icomoon.eot?ju5hpk#iefix") format("embedded-opentype"), url("../fonts/icomoon.ttf?ju5hpk") format("truetype"), url("../fonts/icomoon.woff?ju5hpk") format("woff"), url("../fonts/icomoon.svg?ju5hpk#icomoon") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -120,14 +128,23 @@ ul#location-list {
 .icon-books:before {
   content: "\e920"; }
 
-.icon-phone:before {
-  content: "\e942"; }
-
 .icon-glass2:before {
   content: "\e9a1"; }
 
 .icon-spoon-knife:before {
   content: "\e9a3"; }
 
+.icon-info:before {
+  content: "\ea0c"; }
+
+.icon-cancel-circle:before {
+  content: "\ea0d"; }
+
+.icon-circle-up:before {
+  content: "\ea41"; }
+
 .icon-circle-right:before {
   content: "\ea42"; }
+
+.icon-circle-down:before {
+  content: "\ea43"; }

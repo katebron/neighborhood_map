@@ -1,5 +1,6 @@
 
 
+//locations to show in map & UI
 initialLocations = [
 {
     title: 'Air b&b',
@@ -10,7 +11,35 @@ initialLocations = [
     longitude: -122.657447,
     genre: 'lodging',
   },
+  {
+    title: 'Robert Gray Middle School',
+    address: '5505 SW 23rd, Portland, OR 97239',
+    description: 'Old middle school',
+    url: 'http://www.pps.net/Domain/120',
+    latitude: 45.482560,
+    longitude: -122.701401,
+    genre: 'nostalgia',
+  },
+  {
+    title: 'Fred Meyer',
+    address: '7555 SW Barbur Blvd, Portland, OR 97219',
+    description: 'Freddy Meyer',
+    url: '',
+    latitude: 45.470554,
+    longitude: -122.690408,
+    genre: 'nostalgia',
+  },
+   {
+    title: 'Powell\'s',
+    address: '1005 W Burnside St, Portland, OR 97209',
+    description: 'Flagship location',
+    url: '',
+    latitude: 45.523097,
+    longitude: -122.681325,
+    genre: 'bookstore',
+  },
  {
+
     title: 'Uno Mas taquiza',
     address: '1914 W. Burnside',
     description: 'Taco place megan recommended',
@@ -119,7 +148,7 @@ initialLocations = [
   },
 ]
 
-
+//build up each instance of location to have all elements be KO observables
 var Location = function(data) {  
   this.title = ko.observable(data.title);
   this.address = ko.observable(data.address);
@@ -140,13 +169,23 @@ var Location = function(data) {
 
 var ViewModel = function() {
   var self = this;
+  
+  //build empty observable arrays to fill later
+  self.locationList = ko.observableArray([]);
+  self.images = ko.observableArray([]);
+  
+  //this variable will be used in the search
+  self.query = ko.observable('');
 
-  this.locationList = ko.observableArray([]);
-  this.images = ko.observableArray([]);
+  //sort array so it will be in alphabetical order
   initialLocations.sort(function(a,b) {return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);} );
+
+  //add a few default values
   initialLocations.forEach(function(place){
     place.current = false;
     place.showInfo = false;
+
+    //map icon names for genre, to be used as css classes
     var ico = "";
     switch(place.genre) {
     case 'food':
@@ -166,37 +205,47 @@ var ViewModel = function() {
       break;
     }
     place.genreIcon = ico;
-
+    
+    //make each place an instance of location class
     self.locationList.push(new Location(place));
 
   }, this);
      
-  
-  self.query = ko.observable('');
 
-  // use self whenever you want to get to the outer "this" in a
-  // nested function like below. 
-  this.currentLocation = ko.observable(this.locationList()[0]);
-  this.typeToShow = ko.observable("all");
+  //defaults for page first loading
+  self.currentLocation = ko.observable(this.locationList()[0]);
+  self.typeToShow = ko.observable("all");
   
+  //when a location is clicked on in the UI
   this.setCurrentLocation = function(clickedLocation) {
     //make sure other current location is not set to show as well in map
     self.currentLocation().current(false);
-    self.currentLocation().showInfo(false);
+    if (self.currentLocation().showInfo(true)){
+      self.currentLocation().showInfo(false);
+    }
+    //self.currentLocation().showInfo(false);
+
     //set the new current location
     self.currentLocation(clickedLocation);
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
+
    
+    //run the function to put markers on the google map
     place_markers();
   }
+  this.hideInfo = function(){
+    
+  }
   
+  //function to get images that have been taken around the lat/long of current location
   this.getImages = ko.computed(function(clickedLocation) {
    self.images.removeAll();
    var lat = self.currentLocation().latitude();
    var long = self.currentLocation().longitude();   
    var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
    var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page=0&per_page=5&format=json&nojsoncallback=1';
+   //grab a page of images from flickr. for each image, build up a url for an img src, then push that to the observable images array
    $.ajax({
     type: "GET",
     url: flickr_url,
@@ -211,10 +260,29 @@ var ViewModel = function() {
     }
     });
   }) 
-
+  
+  //show the list of locations on the UI
   this.locationsToShow = ko.pureComputed(function() {
+    //begin a new empty array to help filter locations
     var locations = ko.observableArray();
     locations = this.locationList();
+
+   //get search term from UI
+    var search = this.query().toLowerCase();
+    //if any search term, look for it within list
+    if (search) {
+        locations = ko.utils.arrayFilter(results, function(locale){
+          return (locale.title().toLowerCase().indexOf(search) >= 0);
+      });
+    }
+    //get proper genre to show from radio buttons on UI. filter based on that
+    var desiredType = this.typeToShow();
+    if (desiredType && desiredType != 'all'){
+      locations =  ko.utils.arrayFilter(locations, function(locale) {
+        return locale.genre() === desiredType;
+      });
+    } 
+    //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
       var url = 'http://api.geonames.org/neighbourhoodJSON?lat=' + place.latitude() + '&lng=' + place.longitude() + '&username=katebron&style=full';
       $.ajax({
@@ -228,34 +296,23 @@ var ViewModel = function() {
         }
       });
     }, this);
-
-    var search = this.query().toLowerCase();
-    if (search) {
-        locations = ko.utils.arrayFilter(results, function(locale){
-          return (locale.title().toLowerCase().indexOf(search) >= 0);
-      });
-    }
-    var desiredType = this.typeToShow();
-    if (desiredType && desiredType != 'all'){
-      locations =  ko.utils.arrayFilter(locations, function(locale) {
-        return locale.genre() === desiredType;
-      });
-    } 
     
+    //return filtered list of locations
     return locations;
   }, this);  
 
 
-
+  //this subscriber function will alert place_markers, and with it, google maps, whenever the filtered list of locations to show changes
   this.locationsToShow.subscribe(function(newValue) {
     place_markers();
   }); 
+
 }
 
 
 var markers = []; 
 
-
+//inital google map callback
 window.initializeMap = function() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
@@ -264,13 +321,14 @@ window.initializeMap = function() {
 
   place_markers();
 }
-
+//error message if google maps doesn't load in a certain amount of time
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
     $('#map').html('<span class="error">Our apologies, Google Maps isn\'t working at the moment for us</span>');
   }
 }, 1000);
 
+//refresh markers on google maps - dependent on list of locations
 function place_markers(){
   clearMarkers();
   var i;
@@ -281,6 +339,7 @@ function place_markers(){
   }  
 }
 
+//build marker with data from model
 function addMarker(location){
   var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
   var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.address); 
@@ -305,6 +364,7 @@ function addMarker(location){
   
 } 
 
+//get rid of all markers - needed to refresh map with changes from user
 function clearMarkers() {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
