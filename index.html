@@ -7,37 +7,50 @@
      <link href="css/styles.css" rel=stylesheet /> 
 </head>
 <body>
+   
     <div id='main'>
     <h1>To visit, in Portland.</h1>
     <div id="all_locations">
     
 <p>
     Show:
-    <label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label>
-    <label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' />Food</label>
-    <label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' />Bars</label>
-    <label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' />Nostalgia</label>
-    <label><input type='radio' name="genre" value='bookstore' data-bind='checked: typeToShow' />Books</label>
+    <label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label><br/>
+
+    <label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' /><span class="icon-spoon-knife"></span> Food</label>
+    <label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' /><span class="icon-glass2"></span> Bars</label>
+    <label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' /><span class="icon-quill"></span> Nostalgia</label>
+    <label><input type='radio' name="genre" value='bookstore' data-bind='checked: typeToShow' /><span class="icon-books"></span> Books</label>
+    
 </p>
 Find a place by name
 <input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 
     <ul id="location-list" data-bind="foreach:locationsToShow">
 
-        <li data-bind="click: $root.setCurrentLocation, $root.getImages"><span data-bind="text: title"></span> (<span data-bind="text: genre"></span>)</li>
+       
+
+
+        <li data-bind="click: $root.setCurrentLocation, $root.getImages"> <span data-bind="css: genreIcon"></span>
+            <span class="loc_title" data-bind="text: title">
+        </span> 
+            <div class="loc_info" data-bind="visible: showInfo"><em><span data-bind="text: description"></span></em><br/>
+ <span data-bind="text: neighborhood"></span><br/><span data-bind="text: address"></span>
+          </div>
+        </li>
     </ul>
-    </div>
     
-    <div id="address" data-bind="with: currentLocation">
+</div>
+    
+    <!--<div id="address" data-bind="with: currentLocation">
      
         <span data-bind="text: address"></span> 
          <!--<ul data-bind="foreach: $root.images">-->
         
         
-        </div>
+        <!--</div>-->
         
         <div id = "photos">    
-         <h3>Flickr Photos from around this neighborhood</h3>
+         <h3>Flickr Photos from around the neighborhood</h3>
         <div id = "flickr_imgs" data-bind="foreach:images"> <!---data-bind="foreach: getImages"-->
             <div class="flickr_img_wrap">
            <img data-bind="attr:{src: $data}" />

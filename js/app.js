@@ -4,12 +4,11 @@ initialLocations = [
 {
     title: 'Air b&b',
     address: '745 NE Sumner St, Portland OR 97211',
-    description: 'Here!',
+    description: 'Our backyard',
     url: 'https://www.airbnb.com',
     latitude: 45.560812,
     longitude: -122.657447,
     genre: 'lodging',
-    current: false,
   },
  {
     title: 'Uno Mas taquiza',
@@ -19,16 +18,14 @@ initialLocations = [
     latitude: 45.5228908,
     longitude: -122.6926175,
     genre: 'food',
-    current: false,
   },
   {
-    title: 'wilson high school',
+    title: 'Wilson high school',
     address: '1151 SW Vermont St, Portland, OR 97219 ',
     description: 'high school near old house',
     genre: 'nostalgia',
     latitude: 45.4771954,
     longitude: -122.6920507,
-    current: false,
   },
    {
     title: 'Hale Pele',
@@ -38,7 +35,6 @@ initialLocations = [
     genre: 'bar',
     latitude: 45.5352796,
     longitude: -122.6394542,
-    current: false,
   },
   {
     title: 'Sweedeedee',
@@ -48,7 +44,6 @@ initialLocations = [
     genre: 'food',
     latitude: 45.5605478,
     longitude: -122.6748336,
-    current: false,
   },
   {
     title: 'Little Bird Bistro',
@@ -58,17 +53,15 @@ initialLocations = [
     genre: 'food',
     latitude: 45.522229,
     longitude: -122.677192,
-    current: false,
   },
    {
     title: 'Farm Spirit PDX',
-    address: '1414 SE Morrison StreetPortland OR 97202',
+    address: '1414 SE Morrison Street, Portland OR 97202',
     description: 'Jess pick: Aka Portlands most refined vegetable-focused restaurant yet',
     url: 'http://farmspiritpdx.com/',
     genre: 'food',
     latitude: 45.517108,
     longitude: -122.651217,
-    current: false,
   },
    {
     title: 'Toro Bravo',
@@ -78,7 +71,6 @@ initialLocations = [
     genre: 'food',
     latitude: 45.517108,
     longitude: -122.651217,
-    current: false,
   },
   {
     title: 'Nuestra Concina',
@@ -88,17 +80,15 @@ initialLocations = [
     genre: 'food',
     latitude: 45.505052,
     longitude: -122.643843,
-    current: false,
   },
  {
     title: 'Tasty n Alder',
     address: '580 SW 12th Ave, Portland, OR, 97205',
-    description: 'Jess pick: i can\'t eat much here but it look good and i\'m sure that i could find something to eat',
+    description: 'Jess pick: i can\'t eat much here but it looks good and i\'m sure that i could find something to eat',
     url: 'http://www.tastynalder.com/',
     genre: 'food',
     latitude: 45.521341,
     longitude: -122.683477,
-    current: false,
   },
    {
     title: 'Mediterranean Exploration Company',
@@ -108,7 +98,6 @@ initialLocations = [
     genre: 'food',
     latitude: 45.521341,
     longitude: -122.683477,
-    current: false,
   },
   {
     title: 'Sauce Box',
@@ -118,7 +107,6 @@ initialLocations = [
     genre: 'bar',
     latitude: 45.522696,
     longitude: -122.678183,
-    current: false,
   },
    {
     title: 'Longfellows',
@@ -128,7 +116,6 @@ initialLocations = [
     genre: 'bookstore',
     latitude: 45.505030,
     longitude: -122.651610,
-    current: false,
   },
 ]
 
@@ -141,19 +128,50 @@ var Location = function(data) {
   this.longitude = ko.observable(data.longitude);
   this.url = ko.observable(data.url);
   this.genre = ko.observable(data.genre);
+  this.genreIcon = ko.observable(data.genreIcon);
   this.current = ko.observable(data.current);
+  this.showInfo = ko.observable(data.showInfo);
+  this.neighborhood = ko.observable();
+  this.showSvg = ko.observable(false);
+  
 }
+
+
 
 var ViewModel = function() {
   var self = this;
 
   this.locationList = ko.observableArray([]);
   this.images = ko.observableArray([]);
-
+  initialLocations.sort(function(a,b) {return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);} );
   initialLocations.forEach(function(place){
+    place.current = false;
+    place.showInfo = false;
+    var ico = "";
+    switch(place.genre) {
+    case 'food':
+      ico = 'icon-spoon-knife';
+      break;
+    case 'bar':
+      ico = 'icon-glass2';
+      break;
+    case 'lodging':
+      ico = 'icon-bed';
+      break;
+    case 'nostalgia':
+      ico = 'icon-quill';
+      break;
+    case 'bookstore':
+      ico = 'icon-books';
+      break;
+    }
+    place.genreIcon = ico;
+
     self.locationList.push(new Location(place));
+
+  }, this);
      
-  });
+  
   self.query = ko.observable('');
 
   // use self whenever you want to get to the outer "this" in a
@@ -164,9 +182,12 @@ var ViewModel = function() {
   this.setCurrentLocation = function(clickedLocation) {
     //make sure other current location is not set to show as well in map
     self.currentLocation().current(false);
+    self.currentLocation().showInfo(false);
     //set the new current location
     self.currentLocation(clickedLocation);
     self.currentLocation().current(true);
+    self.currentLocation().showInfo(true);
+   
     place_markers();
   }
   
@@ -192,7 +213,22 @@ var ViewModel = function() {
   }) 
 
   this.locationsToShow = ko.pureComputed(function() {
-    var locations = this.locationList();
+    var locations = ko.observableArray();
+    locations = this.locationList();
+    locations.forEach(function(place){
+      var url = 'http://api.geonames.org/neighbourhoodJSON?lat=' + place.latitude() + '&lng=' + place.longitude() + '&username=katebron&style=full';
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: function(data){
+          place.neighborhood(data.neighbourhood.name + " neighborhood");
+        },
+        error: function(){
+          place.neighborhood("");
+        }
+      });
+    }, this);
+
     var search = this.query().toLowerCase();
     if (search) {
         locations = ko.utils.arrayFilter(results, function(locale){
@@ -202,13 +238,14 @@ var ViewModel = function() {
     var desiredType = this.typeToShow();
     if (desiredType && desiredType != 'all'){
       locations =  ko.utils.arrayFilter(locations, function(locale) {
-      //console.log("this is locale.genre " + ko.toJSON(locale.genre));
         return locale.genre() === desiredType;
       });
     } 
     
     return locations;
   }, this);  
+
+
 
   this.locationsToShow.subscribe(function(newValue) {
     place_markers();
@@ -246,7 +283,7 @@ function place_markers(){
 
 function addMarker(location){
   var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
-  var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.description); 
+  var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.address); 
   var infoWindow = new google.maps.InfoWindow({
     content: desc,
   });

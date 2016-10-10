@@ -1,6 +1,6 @@
 html, body {
   height: 100%;
-  background: gray;
+  background: white;
   margin: 0;
   padding: 0;
   font-family: sans-serif;
@@ -8,6 +8,10 @@ html, body {
   padding-bottom: 12em; }
   html h1, body h1 {
     font-size: normal; }
+
+.icon {
+  width: 5%;
+  height: 1em; }
 
 .error {
   background-color: #ececec;
@@ -20,6 +24,22 @@ html, body {
 
 #map {
   height: 50vh; }
+
+#main {
+  padding: 0 1em; }
+
+ul#location-list {
+  background-color: #e8e8e8;
+  color: #4c4c50;
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+  border: 1px solid #4c4c50; }
+  ul#location-list li {
+    padding: 0.25em 0.25em;
+    border-top: 1px solid #4c4c50; }
+  ul#location-list li:first-of-type {
+    border-top: none; }
 
 #address {
   padding: 0 1em 1em 1em; }
@@ -52,7 +72,7 @@ html, body {
     width: 30%;
     height: 100vh;
     float: left;
-    background-color: gray;
+    background-color: white;
     padding-left: 1em;
     margin-right: 0; }
   #map {
@@ -69,3 +89,45 @@ html, body {
   #flickr_imgs .flickr_img_wrap {
     width: calc(50% - 0.5em);
     height: 50%; } }
+
+/*FROM ICOMOON*/
+@font-face {
+  font-family: 'icomoon';
+  src: url("../fonts/icomoon.eot?42dnun");
+  src: url("../fonts/icomoon.eot?42dnun#iefix") format("embedded-opentype"), url("../fonts/icomoon.ttf?42dnun") format("truetype"), url("../fonts/icomoon.woff?42dnun") format("woff"), url("../fonts/icomoon.svg?42dnun#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.icon-bed:before {
+  content: "\e900"; }
+
+.icon-quill:before {
+  content: "\e907"; }
+
+.icon-books:before {
+  content: "\e920"; }
+
+.icon-phone:before {
+  content: "\e942"; }
+
+.icon-glass2:before {
+  content: "\e9a1"; }
+
+.icon-spoon-knife:before {
+  content: "\e9a3"; }
+
+.icon-circle-right:before {
+  content: "\ea42"; }
