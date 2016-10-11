@@ -37,13 +37,10 @@ Find a place by name
         </span> 
             <div class="loc_info" data-bind="visible: showInfo"><span data-bind="click: $root.hideInfo" class="icon-cancel-circle"></span><span class="not-visible">Close section</span></span><em><span data-bind="text: description"></span></em><br/>
  <span data-bind=""></span><br/><span data-bind="text: address"></span>
- <div id = "photos">    
-         <h3>Flickr Photos from around the neighborhood</h3>
-        <div id = "flickr_imgs" data-bind="foreach:$root.images"> <!---data-bind="foreach: getImages"-->
-            <div class="flickr_img_wrap">
-           <img data-bind="attr:{src: $data}" />
-           </div>
-         </div>
+ <!--<div data-bind="foreach: neighborhoodArticles">
+  <!--<a data-bind="text: title, attr: { href: url, title: title }"></a>-->
+<!--</div>-->
+
        </div>     
           </div>
         </li>

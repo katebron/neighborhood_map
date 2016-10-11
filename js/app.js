@@ -161,7 +161,8 @@ var Location = function(data) {
   this.current = ko.observable(data.current);
   this.showInfo = ko.observable(data.showInfo);
   this.showSvg = ko.observable(false);
-  this.neighborhoodArticles = ko.observableArray();
+  this.neighborhoodArticles = ko.observableArray([]);
+
   
 }
 
@@ -282,16 +283,26 @@ var ViewModel = function() {
         return locale.genre() === desiredType;
       });
     } 
+
     //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
       //https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=10000&gscoord=45.5605478|-122.6748336
       var url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&list=geosearch&gsradius=10000&gscoord=' + place.latitude() + '|' + place.longitude();
+      var wiki_1 = 'http://en.wikipedia.org/?curid=';
       $.ajax({
         type: "GET",
         url: url,
         success: function(data){
+          $(data.query.geosearch).each(function(i, item){
           console.log("this is the url " + url);
-          console.dir(data);
+          console.log("this is item: " + item.title);
+          console.log("this is the url " + wiki_1+item.pageid);
+          place.neighborhoodArticles.push(
+            {
+              title: item.title,
+              url: wiki_1+item.pageid
+            }
+          );
           //place.neighborhood(data.neighbourhood.name + " neighborhood");
         //$(data.photos.photo).each(function(i,item){
         //src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
@@ -299,6 +310,7 @@ var ViewModel = function() {
         //}
         //);
       //},
+          });
         },
         error: function(){
           place.neighborhood("");
