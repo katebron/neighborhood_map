@@ -319,17 +319,7 @@ var ViewModel = function() {
 }
 
 
-var markers = []; 
 
-//inital google map callback
-window.initializeMap = function() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 45.5231, lng: -122.6765},
-    zoom: 12
-  });
-
-  place_markers();
-}
 //error message if google maps doesn't load in a certain amount of time
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
@@ -383,4 +373,18 @@ function clearMarkers() {
 
 var vm = new ViewModel();
   ko.applyBindings(vm);
+
+var markers = []; 
+
+//inital google map callback
+window.initializeMap = function() {
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 45.5231, lng: -122.6765},
+    zoom: 12
+  });
+
+  place_markers();
+}
+
 
