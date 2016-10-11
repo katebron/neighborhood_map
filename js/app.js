@@ -160,8 +160,8 @@ var Location = function(data) {
   this.genreIcon = ko.observable(data.genreIcon);
   this.current = ko.observable(data.current);
   this.showInfo = ko.observable(data.showInfo);
-  this.neighborhood = ko.observable();
   this.showSvg = ko.observable(false);
+  this.neighborhoodArticles = ko.observableArray();
   
 }
 
@@ -284,12 +284,21 @@ var ViewModel = function() {
     } 
     //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
-      var url = 'http://api.geonames.org/neighbourhoodJSON?lat=' + place.latitude() + '&lng=' + place.longitude() + '&username=katebron&style=full';
+      //https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=10000&gscoord=45.5605478|-122.6748336
+      var url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&list=geosearch&gsradius=10000&gscoord=' + place.latitude() + '|' + place.longitude();
       $.ajax({
         type: "GET",
         url: url,
         success: function(data){
-          place.neighborhood(data.neighbourhood.name + " neighborhood");
+          console.log("this is the url " + url);
+          console.dir(data);
+          //place.neighborhood(data.neighbourhood.name + " neighborhood");
+        //$(data.photos.photo).each(function(i,item){
+        //src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
+        //self.images.push(src);
+        //}
+        //);
+      //},
         },
         error: function(){
           place.neighborhood("");
