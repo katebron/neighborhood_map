@@ -287,7 +287,8 @@ var ViewModel = function() {
     //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
       //https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=10000&gscoord=45.5605478|-122.6748336
-      var url = 'https://crossorigin.me/https://en.wikipedia.org/w/api.php?format=json&action=query&list=geosearch&gsradius=10000&gscoord=' + place.latitude() + '|' + place.longitude();
+      var url = 'https://crossorigin.me/https://en.wikipedia.org/w/api.php?format=json&action=query&list=geosearch&gsradius=10000&gscoord='
+       + place.latitude() + '|' + place.longitude();
       var wiki_1 = 'http://en.wikipedia.org/?curid=';
       $.ajax({
         type: "GET",
@@ -300,17 +301,11 @@ var ViewModel = function() {
               url: wiki_1+item.pageid
             }
           );
-          //place.neighborhood(data.neighbourhood.name + " neighborhood");
-        //$(data.photos.photo).each(function(i,item){
-        //src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
-        //self.images.push(src);
-        //}
-        //);
-      //},
+          
           });
         },
         error: function(){
-          place.neighborhood("");
+          place.neighborhood();
         }
       });
     }, this);
@@ -351,19 +346,21 @@ function place_markers(){
 function addMarker(location){
   var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
   var articles = ko.toJSON(location.neighborhoodArticles);
-  articles = JSON.parse(articles);
-  //console.log(articles);
   var articlesToPrint = "";
-  articles.forEach(function(item){
+  articles = JSON.parse(articles);
+  if (articles.length > 0){
+    var articlesToPrint = "<br/><strong>Relevant Wiki Articles:</strong><br/>";
+    articles.forEach(function(item){
     //console.log('<a href="' + item.url+ '">' + item.title + '</a>');
     var wiki_link = '<a href="' + item.url+ '">' + item.title + '</a><br/>';
     articlesToPrint = articlesToPrint + wiki_link;
 
-  });
+    });
+  }
   console.log(articlesToPrint);
   var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.address); 
   var infoWindow = new google.maps.InfoWindow({
-    content: desc + "<br/>Some Wiki articles:<br/> " + articlesToPrint
+    content: desc  + articlesToPrint
   });
   var marker;
    var marker = new google.maps.Marker({

@@ -79,7 +79,12 @@ ul#location-list {
     display: block;
     position: absolute;
     width: 65%;
-    height: 20vh; }
+    height: 20vh; } }
+  @media all and (min-width: 650px) and (1300px) {
+    #photos {
+      bottom: 15%; } }
+
+@media all and (min-width: 650px) {
   #flickr_imgs {
     display: flex;
     overflow: hidden;

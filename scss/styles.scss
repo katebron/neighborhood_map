@@ -85,6 +85,9 @@ ul#location-list{
 	}
 	#photos{
     bottom: 20%;
+    @media all and (1300px){
+      bottom: 15%;
+    }
     right: 0;
 		display: block;
 	  position: absolute;
