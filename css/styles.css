@@ -83,7 +83,7 @@ ul#location-list {
   #flickr_imgs {
     display: flex;
     overflow: hidden;
-    background-color: gray;
+    background-color: #e8e8e8;
     align-items: flex-start;
     position: relative; }
     #flickr_imgs .flickr_img_wrap {

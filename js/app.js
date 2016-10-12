@@ -294,9 +294,6 @@ var ViewModel = function() {
         url: url,
         success: function(data){
           $(data.query.geosearch).each(function(i, item){
-          console.log("this is the url " + url);
-          console.log("this is item: " + item.title);
-          console.log("this is the url " + wiki_1+item.pageid);
           place.neighborhoodArticles.push(
             {
               title: item.title,
@@ -353,9 +350,21 @@ function place_markers(){
 //build marker with data from model
 function addMarker(location){
   var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
+  var articles = ko.toJSON(location.neighborhoodArticles);
+  articles = JSON.parse(articles);
+  //console.log(articles);
+  var articlesToPrint = [];
+  articles.forEach(function(item){
+    //console.log('<a href="' + item.url+ '">' + item.title + '</a>');
+    var wiki_link = '<a href="' + item.url+ '">' + item.title + '</a>';
+    articlesToPrint.push(wiki_link);
+
+  });
+  console.log(articlesToPrint[0]);
   var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.address); 
+  var arts = articlesToPrint[0] + "<br/>" + articlesToPrint[1] + "<br/> " + articlesToPrint[2];
   var infoWindow = new google.maps.InfoWindow({
-    content: desc,
+    content: desc + "<br/>Some Wiki articles:<br/> " + arts,
   });
   var marker;
    var marker = new google.maps.Marker({
