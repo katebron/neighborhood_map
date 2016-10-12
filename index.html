@@ -7,11 +7,21 @@
      <link href="css/styles.css" rel=stylesheet /> 
 </head>
 <body>
-   
+    <div id = "photos" data-bind="with: currentLocation">    
+        
+        <div id = "flickr_imgs" data-bind="foreach:$root.images"> <!---data-bind="foreach: getImages"-->
+            <div class="flickr_img_wrap">
+           <img data-bind="attr:{src: $data}" />
+           </div>
+         </div>
+       </div>     
+          </div>
+
     <div id='main'>
         
     <h1>To visit, in Portland.</h1>
 <div id="map"></div>
+
     <div id="all_locations">
     
 <p>
@@ -35,8 +45,8 @@ Find a place by name
         <li data-bind="click: $root.setCurrentLocation, $root.getImages"> <span data-bind="css: genreIcon"></span>
             <span class="loc_title" data-bind="text: title">
         </span> 
-            <div class="loc_info" data-bind="visible: showInfo"><span data-bind="click: $root.hideInfo" class="icon-cancel-circle"></span><span class="not-visible">Close section</span></span><em><span data-bind="text: description"></span></em><br/>
- <span data-bind=""></span><br/><span data-bind="text: address"></span>
+            <div class="loc_info" data-bind="visible: showInfo"><!--<span data-bind="click: $root.hideInfo" class="icon-cancel-circle"></span><span class="not-visible">Close section</span></span>--><em><span data-bind="text: description"></span></em><br/>
+<span data-bind="text: address"></span>
  <!--<div data-bind="foreach: neighborhoodArticles">
   <!--<a data-bind="text: title, attr: { href: url, title: title }"></a>-->
 <!--</div>-->

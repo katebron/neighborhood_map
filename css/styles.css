@@ -71,25 +71,25 @@ ul#location-list {
     position: absolute;
     top: 0;
     right: 0;
-    height: 100vh;
+    height: 82vh;
     margin-left: 1em; }
   #photos {
+    bottom: 20%;
+    right: 0;
     display: block;
-    position: relative;
-    width: 100%;
-    padding-left: 0;
-    height: 100%; }
+    position: absolute;
+    width: 65%;
+    height: 20vh; }
   #flickr_imgs {
     display: flex;
-    background-color: black;
-    flex-wrap: wrap;
-    flex-flow: space-around;
-    margin-bottom: 1em;
+    overflow: hidden;
+    background-color: gray;
+    align-items: flex-start;
     position: relative; }
     #flickr_imgs .flickr_img_wrap {
       display: inline-block;
-      width: calc(25% - 0.5em);
-      height: 10%;
+      width: 100%;
+      max-height: 10%;
       padding: 0.25em; }
       #flickr_imgs .flickr_img_wrap img {
         width: 100%; } }
