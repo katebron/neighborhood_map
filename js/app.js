@@ -353,18 +353,17 @@ function addMarker(location){
   var articles = ko.toJSON(location.neighborhoodArticles);
   articles = JSON.parse(articles);
   //console.log(articles);
-  var articlesToPrint = [];
+  var articlesToPrint = "";
   articles.forEach(function(item){
     //console.log('<a href="' + item.url+ '">' + item.title + '</a>');
-    var wiki_link = '<a href="' + item.url+ '">' + item.title + '</a>';
-    articlesToPrint.push(wiki_link);
+    var wiki_link = '<a href="' + item.url+ '">' + item.title + '</a><br/>';
+    articlesToPrint = articlesToPrint + wiki_link;
 
   });
-  console.log(articlesToPrint[0]);
+  console.log(articlesToPrint);
   var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.address); 
-  var arts = articlesToPrint[0] + "<br/>" + articlesToPrint[1] + "<br/> " + articlesToPrint[2];
   var infoWindow = new google.maps.InfoWindow({
-    content: desc + "<br/>Some Wiki articles:<br/> " + arts,
+    content: desc + "<br/>Some Wiki articles:<br/> " + articlesToPrint
   });
   var marker;
    var marker = new google.maps.Marker({
