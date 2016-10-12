@@ -41,7 +41,7 @@ initialLocations = [
  {
 
     title: 'Uno Mas taquiza',
-    address: '1914 W. Burnside',
+    address: '1914 W. Burnside, Portland, Oregon 97209',
     description: 'Taco place megan recommended',
     url: 'http://unomastaquiza.com/',
     latitude: 45.5228908,
@@ -53,6 +53,7 @@ initialLocations = [
     address: '1151 SW Vermont St, Portland, OR 97219 ',
     description: 'high school near old house',
     genre: 'nostalgia',
+    url: '',
     latitude: 45.4771954,
     longitude: -122.6920507,
   },
@@ -113,7 +114,8 @@ initialLocations = [
  {
     title: 'Tasty n Alder',
     address: '580 SW 12th Ave, Portland, OR, 97205',
-    description: 'Jess pick: i can\'t eat much here but it looks good and i\'m sure that i could find something to eat',
+    description: 'Jess pick: i can\'t eat much here but it looks good' + 
+      'and i\'m sure that i could find something to eat',
     url: 'http://www.tastynalder.com/',
     genre: 'food',
     latitude: 45.521341,
@@ -122,7 +124,8 @@ initialLocations = [
    {
     title: 'Mediterranean Exploration Company',
     address: '333 NW 13th Ave, Portland OR 97209',
-    description: 'Jess pick: even if not on your bday, i\'d like to go here one night',
+    description: 'Jess pick: even if not on your bday,' +
+      ' i\'d like to go here one night',
     url: 'http://www.tastynalder.com/',
     genre: 'food',
     latitude: 45.521341,
@@ -140,7 +143,8 @@ initialLocations = [
    {
     title: 'Longfellows',
     address: '1401 SE Division St, Portland, OR 97202',
-    description: "Mainstay for classic titles, first editions, fine bindings, rare periodicals, posters & ephemera.",
+    description: "Mainstay for classic titles, first editions, fine bindings," +
+      " rare periodicals, posters & ephemera.",
     url: 'http://www.saucebox.com/',
     genre: 'bookstore',
     latitude: 45.505030,
@@ -245,14 +249,18 @@ var ViewModel = function() {
    var lat = self.currentLocation().latitude();
    var long = self.currentLocation().longitude();   
    var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
-   var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page=0&per_page=5&format=json&nojsoncallback=1';
-   //grab a page of images from flickr. for each image, build up a url for an img src, then push that to the observable images array
+   var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' +
+    flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page'+
+    '=0&per_page=5&format=json&nojsoncallback=1';
+   /*grab a page of images from flickr. for each image, build up a 
+   url for an img src, then push that to the observable images array*/
    $.ajax({
     type: "GET",
     url: flickr_url,
     success: function(data){
         $(data.photos.photo).each(function(i,item){
-        src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id +"_"+ item.secret +"_m.jpg";
+        src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id 
+          +"_"+ item.secret +"_m.jpg";
         self.images.push(src);
         });
       },
@@ -286,10 +294,14 @@ var ViewModel = function() {
 
     //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
-      //https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=10000&gscoord=45.5605478|-122.6748336
-      var url = 'https://crossorigin.me/https://en.wikipedia.org/w/api.php?format=json&action=query&list=geosearch&gsradius=10000&gscoord='
+      //thanks to udacity forum, i am using crossorigin.me to avoid lack of CORS header error
+      var url = 'https://crossorigin.me/https://en.wikipedia.org/w/api.php?format=json' + 
+      '&action=query&list=geosearch&gsradius=10000&gscoord='
        + place.latitude() + '|' + place.longitude();
+       //begin building link to wiki pages
       var wiki_1 = 'http://en.wikipedia.org/?curid=';
+      /*for each article returned, grab title & id, 
+      build link, and push it to the neighborhoodArticles observable array */
       $.ajax({
         type: "GET",
         url: url,
@@ -304,6 +316,8 @@ var ViewModel = function() {
           
           });
         },
+        /*if there is a problem getting info, return empty -
+         deal with this when writing the google maps markers*/
         error: function(){
           place.neighborhood();
         }
@@ -315,7 +329,8 @@ var ViewModel = function() {
   }, this);  
 
 
-  //this subscriber function will alert place_markers, and with it, google maps, whenever the filtered list of locations to show changes
+  /*this subscriber function will alert place_markers, and with it,
+  google maps, whenever the filtered list of locations to show changes*/
   this.locationsToShow.subscribe(function(newValue) {
     place_markers();
   }); 
@@ -327,7 +342,8 @@ var ViewModel = function() {
 //error message if google maps doesn't load in a certain amount of time
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
-    $('#map').html('<span class="error">Our apologies, Google Maps isn\'t working at the moment for us</span>');
+    $('#map').html('<span class="error">Our apologies, Google Maps isn\'t\
+       working at the moment for us</span>');
   }
 }, 1000);
 
@@ -344,7 +360,10 @@ function place_markers(){
 
 //build marker with data from model
 function addMarker(location){
+  //get lat & long from the observable
   var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
+
+  //prepare the wiki articles, if any
   var articles = ko.toJSON(location.neighborhoodArticles);
   var articlesToPrint = "";
   articles = JSON.parse(articles);
@@ -357,11 +376,30 @@ function addMarker(location){
 
     });
   }
-  console.log(articlesToPrint);
-  var desc = "<strong>" + ko.toJSON(location.title) + "</strong><br/> " + ko.toJSON(location.address); 
+  //get link, address, and name of the place
+  var link = JSON.parse(ko.toJSON(location.url));
+  var address = JSON.parse(ko.toJSON(location.address));
+  var name = JSON.parse(ko.toJSON(location.title));
+  
+  //if the place has a url, link to it
+  if (link != ""){
+    var desc = "<strong><a href='" + link + 
+    "'/>" + name + "</a></strong><br/> " 
+  }
+  else {
+    desc = "<strong>" + name +
+     "</a></strong><br/> "; 
+  } 
+  //build the direction link
+  address_dir = "<a href='https://www.google.com/maps?saddr=My+Location" +
+  "&daddr=" + address + "'>" + address + '</a><br/>';
+
+  //put the info together in an infowindow   
   var infoWindow = new google.maps.InfoWindow({
-    content: desc  + articlesToPrint
+    content: desc  + address_dir + articlesToPrint
   });
+
+  //make marker for each location
   var marker;
    var marker = new google.maps.Marker({
     position: latLng,
@@ -369,18 +407,22 @@ function addMarker(location){
   });
   markers.push(marker); 
 
+  /*check to see if the location is current.
+  if so, open the info window*/
   if(ko.toJSON(location.current) == "true"){
     infoWindow.open(marker.get('map'), marker);
   }
-
- 
+  
+  /*if someone clicks on the map itself,
+  open infowindow as well*/
   marker.addListener('click', function(){
     infoWindow.open(marker.get('map'), marker);
   });
   
 } 
 
-//get rid of all markers - needed to refresh map with changes from user
+/*get rid of all markers - 
+needed to refresh map with changes from user*/
 function clearMarkers() {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
@@ -395,12 +437,12 @@ var markers = [];
 
 //inital google map callback
 window.initializeMap = function() {
-
+  //set the map in portland with this lat/lang
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 12
   });
-
+  //set up the initial markers on the map.
   place_markers();
 }
 
