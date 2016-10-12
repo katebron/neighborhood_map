@@ -430,10 +430,6 @@ function clearMarkers() {
   markers = [];
 }
 
-var vm = new ViewModel();
-  ko.applyBindings(vm);
-
-var markers = []; 
 
 //inital google map callback
 window.initializeMap = function() {
@@ -446,4 +442,8 @@ window.initializeMap = function() {
   place_markers();
 }
 
+var vm = new ViewModel();
+  ko.applyBindings(vm);
+
+var markers = []; 
 

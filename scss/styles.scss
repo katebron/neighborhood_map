@@ -62,6 +62,7 @@ ul#location-list{
 		margin:0;
 		h1{
 		  padding: 0 0 0.5em 0.5em;
+      width: 30%;
 		}
 	}
 	#all_locations{
@@ -85,9 +86,13 @@ ul#location-list{
 	}
 	#photos{
     bottom: 20%;
-    @media all and (1300px){
+    @media all and (min-width: 1300px) {
       bottom: 15%;
     }
+    @media all and (min-width: 1600px){
+      bottom: 10%;
+    }
+   
     right: 0;
 		display: block;
 	  position: absolute;
