@@ -287,7 +287,7 @@ var ViewModel = function() {
     //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
       //https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=10000&gscoord=45.5605478|-122.6748336
-      var url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&list=geosearch&gsradius=10000&gscoord=' + place.latitude() + '|' + place.longitude();
+      var url = 'https://crossorigin.me/https://en.wikipedia.org/w/api.php?format=json&action=query&list=geosearch&gsradius=10000&gscoord=' + place.latitude() + '|' + place.longitude();
       var wiki_1 = 'http://en.wikipedia.org/?curid=';
       $.ajax({
         type: "GET",
