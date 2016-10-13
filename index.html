@@ -24,18 +24,21 @@
 
     <div id="all_locations">
     
-<p>
+<div>
     Show:
-    <label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label><br/>
+    <p><label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label>
 
-    <label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' /><span class="icon-spoon-knife"></span> Food</label>
+rporla    <label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' /><span class="icon-spoon-knife"></span> Food</label>
     <label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' /><span class="icon-glass2"></span> Bars</label>
     <label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' /><span class="icon-quill"></span> Nostalgia</label>
     <label><input type='radio' name="genre" value='bookstore' data-bind='checked: typeToShow' /><span class="icon-books"></span> Books</label>
-    
+    <label><input type='radio' name="genre" value='misc' data-bind='checked: typeToShow' /><span class="icon-magnet"></span> Misc</label>
+
 </p>
-Find a place by name
-<input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+<p>Find a place by name
+<input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off"></p>
+</div>
+
 
     <ul id="location-list" data-bind="foreach:locationsToShow">
 

@@ -2,11 +2,31 @@
 
 //locations to show in map & UI
 initialLocations = [
+
+{
+    title: 'Hollywood Theatre',
+    address: '4122 NE Sandy Blvd, Portland, OR 97212',
+    description: 'Non-profit movie theater. Alamo-like',
+    url: 'http://hollywoodtheatre.org/',
+    latitude: 45.535487,
+    longitude: -122.620626,
+    genre: 'misc',
+  },
+{
+    title: 'Pine Street Market',
+    address: '126 SW 2nd Ave, Portland, OR 97204',
+    description: 'Food hall including Salt & Straw\'s whiz bang soft serve bar',
+    url: 'https://www.airbnb.com',
+    latitude: 45.521455,
+    longitude: -122.672336,
+    genre: 'food',
+  },
+
 {
     title: 'Air b&b',
     address: '745 NE Sumner St, Portland OR 97211',
     description: 'Our backyard',
-    url: 'https://www.airbnb.com',
+    url: 'https://pinestreetmarket.squarespace.com/tenants',
     latitude: 45.560812,
     longitude: -122.657447,
     genre: 'lodging',
@@ -208,6 +228,9 @@ var ViewModel = function() {
     case 'bookstore':
       ico = 'icon-books';
       break;
+    case 'misc':
+      ico = 'icon-magnet';
+      break;     
     }
     place.genreIcon = ico;
     
@@ -295,7 +318,7 @@ var ViewModel = function() {
     //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
       //thanks to udacity forum, i am using crossorigin.me to avoid lack of CORS header error
-      var url = 'https://crossorigin.me/https://en.wikipedia.org/w/api.php?format=json' + 
+      var url = 'https://en.wikipedia.org/w/api.php?format=json' + 
       '&action=query&list=geosearch&gsradius=10000&gscoord='
        + place.latitude() + '|' + place.longitude();
        //begin building link to wiki pages
@@ -305,6 +328,7 @@ var ViewModel = function() {
       $.ajax({
         type: "GET",
         url: url,
+        dataType: "jsonp",
         success: function(data){
           $(data.query.geosearch).each(function(i, item){
           place.neighborhoodArticles.push(

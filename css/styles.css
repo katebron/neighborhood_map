@@ -134,14 +134,23 @@ ul#location-list {
 .icon-quill:before {
   content: "\e907"; }
 
+.icon-music:before {
+  content: "\e911"; }
+
 .icon-books:before {
   content: "\e920"; }
+
+.icon-library:before {
+  content: "\e921"; }
 
 .icon-glass2:before {
   content: "\e9a1"; }
 
 .icon-spoon-knife:before {
   content: "\e9a3"; }
+
+.icon-magnet:before {
+  content: "\e9ab"; }
 
 .icon-info:before {
   content: "\ea0c"; }

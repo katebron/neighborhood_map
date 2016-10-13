@@ -4,9 +4,17 @@ http://api.geonames.org/findNearbyWikipedia?lat=45.5605478&lng=-122.6748336&user
 
 https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=10000&gscoord=45.5605478|-122.6748336
 
+
+down vote
+You can just use a URL like this:
+
+http://en.wikipedia.org/?curid=7012891
+
 OR
 
 https://dev.twitter.com/rest/reference/get/geo/search
+
+https://api.twitter.com/1.1/geo/reverse_geocode.json?lat=45.5605478&long=-122.6748336
 
 
 FLICKR:
