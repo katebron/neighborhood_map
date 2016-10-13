@@ -8,7 +8,41 @@ position: relative;
 padding-bottom: 12em;
  h1{
  	font-size: normal;
+  padding-bottom: 0;
+  margin-bottom: 0;
  }
+ h2{
+  font-size: small;
+  padding: 0;
+  margin: 0;
+ }
+}
+#filter{
+  margin-top: 1em;
+  @media all and (min-width: 600px){
+    margin-top: 0;
+  }
+  background-color: #ececec;
+  padding: 0.5em;
+  p{
+    padding: 0;
+    margin:0;
+  }
+  label{
+    line-height: 2.5;
+    @media all and (min-width: 500px){
+      line-height: 1.5;
+    }
+  }
+  input[type="radio"]{
+    margin: 0 0.5em 0 1em;
+  }
+  input[type="search"] {
+    border: 1px solid gray;  
+    width: 100%;
+    font-size: 0.75em;
+    padding: 0.25em;
+  }
 }
 .icon{
 	width: 5%;

@@ -8,8 +8,9 @@
 </head>
 <body>
     <div id = "photos" data-bind="with: currentLocation">    
-        
+        <h2>Flickr photos from around this location</h2>
         <div id = "flickr_imgs" data-bind="foreach:$root.images"> <!---data-bind="foreach: getImages"-->
+            
             <div class="flickr_img_wrap">
            <img data-bind="attr:{src: $data}" />
            </div>
@@ -24,19 +25,19 @@
 
     <div id="all_locations">
     
-<div>
-    Show:
+<div id = "filter">
+    <h2>Filter locations by type or name</h2>
     <p><label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label>
 
-rporla    <label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' /><span class="icon-spoon-knife"></span> Food</label>
+ <label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' /><span class="icon-spoon-knife"></span> Food</label>
     <label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' /><span class="icon-glass2"></span> Bars</label>
     <label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' /><span class="icon-quill"></span> Nostalgia</label>
     <label><input type='radio' name="genre" value='bookstore' data-bind='checked: typeToShow' /><span class="icon-books"></span> Books</label>
     <label><input type='radio' name="genre" value='misc' data-bind='checked: typeToShow' /><span class="icon-magnet"></span> Misc</label>
 
 </p>
-<p>Find a place by name
-<input placeholder="Search…" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off"></p>
+<p><label>Find a place by name:</label>
+<input placeholder="Name of location" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off"></p>
 </div>
 
 

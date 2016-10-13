@@ -7,7 +7,36 @@ html, body {
   position: relative;
   padding-bottom: 12em; }
   html h1, body h1 {
-    font-size: normal; }
+    font-size: normal;
+    padding-bottom: 0;
+    margin-bottom: 0; }
+  html h2, body h2 {
+    font-size: small;
+    padding: 0;
+    margin: 0; }
+
+#filter {
+  margin-top: 1em;
+  background-color: #ececec;
+  padding: 0.5em; }
+  @media all and (min-width: 600px) {
+    #filter {
+      margin-top: 0; } }
+  #filter p {
+    padding: 0;
+    margin: 0; }
+  #filter label {
+    line-height: 2.5; }
+    @media all and (min-width: 500px) {
+      #filter label {
+        line-height: 1.5; } }
+  #filter input[type="radio"] {
+    margin: 0 0.5em 0 1em; }
+  #filter input[type="search"] {
+    border: 1px solid gray;
+    width: 100%;
+    font-size: 0.75em;
+    padding: 0.25em; }
 
 .icon {
   width: 5%;
