@@ -7,16 +7,7 @@
      <link href="css/styles.css" rel=stylesheet /> 
 </head>
 <body>
-    <div id = "photos" data-bind="with: currentLocation">    
-        <h2>Flickr photos from around this location</h2>
-        <div id = "flickr_imgs" data-bind="foreach:$root.images"> <!---data-bind="foreach: getImages"-->
-            
-            <div class="flickr_img_wrap">
-           <img data-bind="attr:{src: $data}" />
-           </div>
-         </div>
-       </div>     
-          </div>
+   
 
     <div id='main'>
         
@@ -69,7 +60,16 @@
         
         
         <!--</div>-->
-        
+         <div id = "photos" data-bind="with: currentLocation">    
+        <h2>Flickr photos from around this location</h2>
+        <div id = "flickr_imgs" data-bind="foreach:$root.images"> <!---data-bind="foreach: getImages"-->
+            
+            <div class="flickr_img_wrap">
+           <img data-bind="attr:{src: $data}" />
+           </div>
+         </div>
+       </div>     
+          </div>
         
     </div><!--end main ui-->
 
