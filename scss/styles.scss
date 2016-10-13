@@ -1,23 +1,21 @@
 html, body {
-height: 100%;
-background: white;
-margin: 0;
-padding: 0;
-font-family: sans-serif;
-position: relative;
-padding-bottom: 12em;
- h1{
+  height: 100%;
+  background: white;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  position: relative;
+  padding-bottom: 12em;
+}  
+h1{
  	font-size: normal;
   padding-bottom: 0;
-  margin-bottom: 0;
- 
- }
- h2{
-  font-size: small;
-  padding: 0;
-  margin: 0;
- }
+  margin-bottom: 0; 
 }
+h2{
+  font-size: small;
+}
+
 #filter{
   margin-top: 1em;
   @media all and (min-width: 600px){
@@ -68,20 +66,20 @@ height: 50vh;
   padding: 0 1em;
 }
 ul#location-list{
- background-color: #e8e8e8;
- color: #4c4c50;
- list-style-type: none;
- margin-left: 0;
- padding-left: 0;
- border: 1px solid #4c4c50;
- li{
- 	padding: 0.25em 0.25em;
- 	border-top: 1px solid #4c4c50;
- }
- li:first-of-type{
- 	border-top: none;
- }
- li:after{
+  background-color: #e8e8e8;
+  color: #4c4c50;
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+  border: 1px solid #4c4c50;
+  li{
+ 	  padding: 0.25em 0.25em;
+ 	  border-top: 1px solid #4c4c50;
+  }
+  li:first-of-type{
+ 	  border-top: none;
+  }
+  li:after{
  	//content: ">";
  }
 }
@@ -93,9 +91,69 @@ ul#location-list{
 }
 #photos{
   position: static;
-  bottom: 0;
-  
-    @media all and (min-width: 500px){
+  bottom: 0; 
+  @media all and (max-width: 500px){
+    h2{
+      padding-left: 1em;
+      padding-bottom:0;
+      margin-bottom:0;
+    }
+  }
+  #flickr_imgs{
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #e8e8e8;
+    align-items: flex-start;
+    position: relative;
+    .flickr_img_wrap{
+      display: inline-block;
+      max-width: 80%;
+      max-height: 20%;
+      padding: 1em;
+      img{
+        width: 100%;
+      }
+    }
+  }
+}  
+.not-visible{
+  visibility: hidden;
+  font-size: 1px;
+}
+@media all and (min-width: 500px){
+  #main{
+	  padding: 0;
+	  margin:0;
+	  h1{
+	    padding: 0 0 0.5em 0.5em;
+      width: 30%;
+	  }
+    h2{
+      padding: 0;
+      margin: 0;
+    } 
+  }
+  #all_locations{
+    display: inline-block;
+    width: 30%;
+    height: 100vh;
+    float: left;
+    background-color: white;
+    padding-left: 1em;
+    margin-right: 0;
+  }
+  #map{
+  	display: inline-block;
+    margin-left: 0;
+    width: 65%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 82vh;
+    margin-left: 1em;
+  }
+  #photos{
     position: absolute;
     bottom: 20%;
     right: 0;
@@ -103,70 +161,28 @@ ul#location-list{
     
     width: 65%;
     height: 20vh;
-    }
     @media all and (min-width: 1300px) {
       bottom: 15%;
     }
     @media all and (min-width: 1600px){
       bottom: 10%;
+    } 
+
+    #flickr_imgs{
+      flex-direction: row;
+      .flickr_img_wrap{
+        display: inline-block;
+        width: 100%;
+        max-height: 10%;
+        padding: 0.25em;
+        img{
+          width: 100%;
+        }
+      }
     }
-   
-    
-   
-    
   }
-  
-  #flickr_imgs{
- display: flex;
-  overflow: hidden;
- background-color: #e8e8e8;
- align-items: flex-start;
- position: relative;
- .flickr_img_wrap{
-  display: inline-block;
-    width: 100%;
-    max-height: 10%;
-    padding: 0.25em;
-  
-  img{
-    width: 100%;
-   }
- }
 }
-@media all and (min-width: 650px){
-	#main{
-		padding: 0;
-		margin:0;
-		h1{
-		  padding: 0 0 0.5em 0.5em;
-      width: 30%;
-		}
-	}
-	#all_locations{
-	   display: inline-block;
-       width: 30%;
-       height: 100vh;
-       float: left;
-       background-color: white;
-       padding-left: 1em;
-       margin-right: 0;
-	}
-	#map{
-		display: inline-block;
-      margin-left: 0;
-	  width: 65%;
-	  position: absolute;
-	  top: 0;
-	  right: 0;
-	  height: 82vh;
-	  margin-left: 1em;
-	}
-	
-}
-.not-visible{
-  visibility: hidden;
-  font-size: 1px;
-}
+
 /*FROM ICOMOON*/
 @font-face {
   font-family: 'icomoon';
