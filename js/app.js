@@ -455,16 +455,7 @@ function clearMarkers() {
 }
 
 
-//inital google map callback
-window.initializeMap = function() {
-  //set the map in portland with this lat/lang
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 45.5231, lng: -122.6765},
-    zoom: 12
-  });
-  //set up the initial markers on the map.
-  place_markers();
-}
+
 
 var vm = new ViewModel();
   ko.applyBindings(vm);
