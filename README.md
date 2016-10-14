@@ -6,7 +6,7 @@ Built for Udacity's Neighborhood Map Project
 
 ### Technology Used
 
-* Knockout JS:  interactity with user. Presents information 
+* Knockout JS:  interactivity with user. Presents information 
   based on the current location to the map (via Google Maps API) and surrounding web page.
 * Google Maps API: provides the map and enables location info to be present
   in infowindows.
