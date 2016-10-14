@@ -317,7 +317,6 @@ var ViewModel = function() {
 
     //grab neighborhood data (just the name, for now) for each location
     locations.forEach(function(place){
-      //thanks to udacity forum, i am using crossorigin.me to avoid lack of CORS header error
       var url = 'https://en.wikipedia.org/w/api.php?format=json' + 
       '&action=query&list=geosearch&gsradius=10000&gscoord='
        + place.latitude() + '|' + place.longitude();
@@ -392,7 +391,7 @@ function addMarker(location){
   var articlesToPrint = "";
   articles = JSON.parse(articles);
   if (articles.length > 0){
-    var articlesToPrint = "<br/><strong>Relevant Wiki Articles:</strong><br/>";
+    var articlesToPrint = "<br/><strong>Wiki articles about the area:</strong><br/>";
     articles.forEach(function(item){
     //console.log('<a href="' + item.url+ '">' + item.title + '</a>');
     var wiki_link = '<a href="' + item.url+ '">' + item.title + '</a><br/>';

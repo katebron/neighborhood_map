@@ -91,7 +91,7 @@ ul#location-list {
     flex-direction: column;
     overflow: hidden;
     background-color: #e8e8e8;
-    align-items: flex-start;
+    align-items: center;
     position: relative; }
     #photos #flickr_imgs .flickr_img_wrap {
       display: inline-block;
@@ -148,7 +148,8 @@ ul#location-list {
 
 @media all and (min-width: 500px) {
     #photos #flickr_imgs {
-      flex-direction: row; }
+      flex-direction: row;
+      align-items: flex-start; }
       #photos #flickr_imgs .flickr_img_wrap {
         display: inline-block;
         width: 100%;
