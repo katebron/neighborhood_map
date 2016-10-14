@@ -2,7 +2,7 @@
 
 Built for Udacity's Neighborhood Map Project
 
-*Neighborhood Map](https://katebron.github.io/neighborhood_map/)*
+*[Neighborhood Map](https://katebron.github.io/neighborhood_map/)*
 
 ### Technology Used
 
