@@ -4,6 +4,64 @@
 initialLocations = [
 
 {
+    title: 'Por Que No? Taqueria',
+    address: '3524 N Mississippi Ave. Portland, OR 97227',
+    description: 'Busy but well regarded taqueria & bar',
+    url: 'http://www.porquenotacos.com/',
+    latitude: 45.548160,
+    longitude: -122.675306,
+    genre: 'food',
+},
+{
+    title: 'Seastar Bakery',
+    address: '1603 NE Killingsworth Street',
+    description: 'Toasts',
+    url: 'http://seastarbakery.com/',
+    latitude: 45.562730,
+    longitude: -122.648892,
+    genre: 'food',
+},
+{
+    title: 'Ground Kontrol Classic Arcade',
+    address: '511 NW Couch St, Portland, OR 97209',
+    description: '',
+    url: 'http://groundkontrol.com/',
+    latitude: 45.523922,
+    longitude: -122.675841,
+    genre: 'misc',
+},
+{
+    title: 'Kid Toy Musuem',
+    address: '1301 SE Grand Ave, Portland, OR 97214',
+    description: '',
+    url: 'http://www.kiddstoymuseum.com/',
+    latitude: 45.513545,
+    longitude: -122.661009,
+    genre: 'misc',
+},
+
+{
+    title: 'Movie Madness',
+    address: '4320 SE Belmont St, Portland, OR 97215',
+    description: 'Has a small museum of movie things, may be tiny',
+    url: 'http://moviemadnessvideo.com/store/',
+    latitude: 45.516423,
+    longitude: -122.617279,
+    genre: 'misc',
+},
+
+
+{
+    title: 'Reading Frenzy',
+    address: '3628 N Mississippi Ave, Portland, OR 97227',
+    description: 'Small book shop & gallery featuring zines plus small-press, independent & self-published volumes.',
+    url: 'http://www.readingfrenzy.com',
+    latitude: 45.549150,
+    longitude: -122.675199,
+    genre: 'bookstore',
+},
+
+{
     title: 'Hollywood Theatre',
     address: '4122 NE Sandy Blvd, Portland, OR 97212',
     description: 'Non-profit movie theater. Alamo-like',
@@ -415,7 +473,7 @@ function addMarker(location){
   } 
   //build the direction link
   address_dir = "<a href='https://www.google.com/maps?saddr=My+Location" +
-  "&daddr=" + address + "'>" + address + '</a><br/>';
+  "&daddr=" + address + "' target='_blank'>" + address + '</a><br/>';
 
   //put the info together in an infowindow   
   var infoWindow = new google.maps.InfoWindow({
