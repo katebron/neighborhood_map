@@ -452,7 +452,7 @@ function addMarker(location){
     var articlesToPrint = "<br/><strong>Wiki articles about the area:</strong><br/>";
     articles.forEach(function(item){
     //console.log('<a href="' + item.url+ '">' + item.title + '</a>');
-    var wiki_link = '<a href="' + item.url+ '">' + item.title + '</a><br/>';
+    var wiki_link = '<a href="' + item.url+ ' target="_blank"''>' + item.title + '</a><br/>';
     articlesToPrint = articlesToPrint + wiki_link;
 
     });
@@ -465,7 +465,7 @@ function addMarker(location){
   //if the place has a url, link to it
   if (link != ""){
     var desc = "<strong><a href='" + link + 
-    "'/>" + name + "</a></strong><br/> " 
+    "' target='_blank'/>" + name + "</a></strong><br/> " 
   }
   else {
     desc = "<strong>" + name +
