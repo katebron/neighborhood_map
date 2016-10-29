@@ -1,6 +1,21 @@
 
+/** locations to show in map & UI */
 
-//locations to show in map & UI
+/* jshint strict: true */
+/*global ko*/
+function mapApp() {
+  //'use strict';
+
+
+  //set the map in portland with this lat/lang
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 45.5231, lng: -122.6765},
+    zoom: 12
+  });
+  //set up the initial markers on the map.
+  //place_markers();
+ var markers = [];
+ var initialLocations = [];
 initialLocations = [
 
 {
@@ -170,23 +185,30 @@ initialLocations = [
     latitude: 45.505030,
     longitude: -122.651610,
   },
-]
+];
 
-//build up each instance of location to have all elements be KO observables
+/** build up each instance of location to have all elements be KO observables */
 var Location = function(data) {  
-  this.title = ko.observable(data.title);
-  this.address = ko.observable(data.address);
-  this.description = ko.observable(data.description);
-  this.latitude = ko.observable(data.latitude);
-  this.longitude = ko.observable(data.longitude);
-  this.url = ko.observable(data.url);
-  this.genre = ko.observable(data.genre);
-  this.genreIcon = ko.observable(data.genreIcon);
+  this.title = data.title;
+  this.address = data.address;
+  this.description = data.description;
+  this.latitude = data.latitude;
+  this.longitude = data.longitude;
+  this.url = data.url;
+  this.genre = data.genre;
+  this.genreIcon = data.genreIcon;
   this.current = ko.observable(data.current);
   this.showInfo = ko.observable(data.showInfo);
   this.showSvg = ko.observable(false);
   this.neighborhoodArticles = ko.observableArray([]);
+  this.latLng = {lat: data.latitude, lng: data.longitude};
+  this.marker = new google.maps.Marker({
+    position: this.latLng,
+    map: map,
+  });
 
+    markers.push(this.marker); 
+  this.infoW = ko.observable('Pending search...');
   
 }
 
@@ -195,22 +217,23 @@ var Location = function(data) {
 var ViewModel = function() {
   var self = this;
   
-  //build empty observable arrays to fill later
+  /** build empty observable arrays to fill later */
   self.locationList = ko.observableArray([]);
-  self.images = ko.observableArray([]);
+  //self.images = ko.observableArray([]);
   
-  //this variable will be used in the search
+  /** this variable will be used in the search */
   self.query = ko.observable('');
 
-  //sort array so it will be in alphabetical order
+  /** sort array so it will be in alphabetical order */
   initialLocations.sort(function(a,b) {return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);} );
 
-  //add a few default values
+  
+  /** add a few default values */
   initialLocations.forEach(function(place){
     place.current = false;
     place.showInfo = false;
 
-    //map icon names for genre, to be used as css classes
+    /** map icon names for genre, to be used as css classes */
     var ico = "";
     switch(place.genre) {
     case 'food':
@@ -234,135 +257,88 @@ var ViewModel = function() {
     }
     place.genreIcon = ico;
     
-    //make each place an instance of location class
+    /** make each place an instance of location class */
     self.locationList.push(new Location(place));
 
   }, this);
      
 
-  //defaults for page first loading
+  /** defaults for page first loading */
   self.currentLocation = ko.observable(this.locationList()[0]);
   self.typeToShow = ko.observable("all");
-  
-  //when a location is clicked on in the UI
+    
+  /** when a location is clicked on in the UI */
   this.setCurrentLocation = function(clickedLocation) {
-    //make sure other current location is not set to show as well in map
+    /** make sure other current location is not set to show as well in map */
     self.currentLocation().current(false);
     if (self.currentLocation().showInfo(true)){
       self.currentLocation().showInfo(false);
     }
-    //self.currentLocation().showInfo(false);
-
-    //set the new current location
+    
+    /** set the new current location */
     self.currentLocation(clickedLocation);
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
 
    
-    //run the function to put markers on the google map
-    place_markers();
+    /** run the function to put markers on the google map */
+    //place_markers();
   }
   this.hideInfo = function(){
     
   }
   
-  //function to get images that have been taken around the lat/long of current location
-  this.getImages = ko.computed(function(clickedLocation) {
-   self.images.removeAll();
-   var lat = self.currentLocation().latitude();
-   var long = self.currentLocation().longitude();   
-   var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
-   var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' +
-    flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page'+
-    '=0&per_page=5&format=json&nojsoncallback=1';
-   /*grab a page of images from flickr. for each image, build up a 
-   url for an img src, then push that to the observable images array*/
-   $.ajax({
-    type: "GET",
-    url: flickr_url,
-    success: function(data){
-        $(data.photos.photo).each(function(i,item){
-        src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id 
-          +"_"+ item.secret +"_m.jpg";
-        self.images.push(src);
-        });
-      },
-    error: function(){
-      $('#photos').append("<em>Temporarily unable to pull from the flickr API</em>");
-    }
-    });
-  }) 
   
-  //show the list of locations on the UI
+  /** show the list of locations on the UI */
   this.locationsToShow = ko.pureComputed(function() {
-    //begin a new empty array to help filter locations
-    var locations = ko.observableArray();
+    /** begin a new empty array to help filter locations */
+    //var locations = ko.observableArray();
+
     locations = this.locationList();
 
-   //get search term from UI
+    /** first set all to false, then
+     after filtering locations, set to true */
+    locations.forEach(function(location) {
+      location.marker.setVisible(false);
+    });
+
+   /** get search term from UI */
     var search = this.query().toLowerCase();
-    //if any search term, look for it within list
+
+    /** if any search term, look for it within list */
     if (search) {
-        locations = ko.utils.arrayFilter(results, function(locale){
-          return (locale.title().toLowerCase().indexOf(search) >= 0);
+        locations = ko.utils.arrayFilter(locations, function(locale){
+          return (locale.title.toLowerCase().indexOf(search) >= 0);
       });
     }
-    //get proper genre to show from radio buttons on UI. filter based on that
+    /** get proper genre to show from radio buttons on UI. filter based on that */
     var desiredType = this.typeToShow();
     if (desiredType && desiredType != 'all'){
       locations =  ko.utils.arrayFilter(locations, function(locale) {
-        return locale.genre() === desiredType;
+        return locale.genre === desiredType;
       });
     } 
-
-    //grab neighborhood data (just the name, for now) for each location
-    locations.forEach(function(place){
-      var url = 'https://en.wikipedia.org/w/api.php?format=json' + 
-      '&action=query&list=geosearch&gsradius=10000&gscoord='
-       + place.latitude() + '|' + place.longitude();
-       //begin building link to wiki pages
-      var wiki_1 = 'http://en.wikipedia.org/?curid=';
-      /*for each article returned, grab title & id, 
-      build link, and push it to the neighborhoodArticles observable array */
-      $.ajax({
-        type: "GET",
-        url: url,
-        dataType: "jsonp",
-        success: function(data){
-          $(data.query.geosearch).each(function(i, item){
-          place.neighborhoodArticles.push(
-            {
-              title: item.title,
-              url: wiki_1+item.pageid
-            }
-          );
-          
-          });
-        },
-        /*if there is a problem getting info, return empty -
-         deal with this when writing the google maps markers*/
-        error: function(){
-          place.neighborhood();
-        }
-      });
-    }, this);
+    locations.forEach(function(location){
+      location.marker.setVisible(true);
+    })
+    /** grab neighborhood data (just the name, for now) for each location */
     
-    //return filtered list of locations
+    /** return filtered list of locations */
     return locations;
   }, this);  
 
 
-  /*this subscriber function will alert place_markers, and with it,
-  google maps, whenever the filtered list of locations to show changes*/
-  this.locationsToShow.subscribe(function(newValue) {
-    place_markers();
+  /** this subscriber function will alert place_markers, and with it,
+  google maps, whenever the filtered list of locations to show changes */
+  this.locationsToShow.subscribe(function( ) {
+    //place_markers();
   }); 
-
+  console.log("this is markers " + markers);
 }
 
 
 
-//error message if google maps doesn't load in a certain amount of time
+/** error message if google maps doesn't load in a certain amount of time */
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
     $('#map').html('<span class="error">Our apologies, Google Maps isn\'t\
@@ -370,87 +346,21 @@ setTimeout(function(){
   }
 }, 1000);
 
-//refresh markers on google maps - dependent on list of locations
-function place_markers(){
-  clearMarkers();
-  var i;
-  results = vm.locationsToShow();
 
-  for(i=0; i < results.length; i++ ) {
-    addMarker(results[i]);
-  }  
-}
 
-//build marker with data from model
-function addMarker(location){
-  //get lat & long from the observable
-  var latLng = new google.maps.LatLng(ko.toJSON(location.latitude),ko.toJSON(location.longitude));
 
-  //prepare the wiki articles, if any
-  var articles = ko.toJSON(location.neighborhoodArticles);
-  var articlesToPrint = "";
-  articles = JSON.parse(articles);
-  if (articles.length > 0){
-    var articlesToPrint = "<br/><strong>Wiki articles about the area:</strong><br/>";
-    articles.forEach(function(item){
-    //console.log('<a href="' + item.url+ '">' + item.title + '</a>');
-    var wiki_link = '<a href="' + item.url+ '">' + item.title + '</a><br/>';
-    articlesToPrint = articlesToPrint + wiki_link;
-
-    });
-  }
-  //get link, address, and name of the place
-  var link = JSON.parse(ko.toJSON(location.url));
-  var address = JSON.parse(ko.toJSON(location.address));
-  var name = JSON.parse(ko.toJSON(location.title));
-  
-  //if the place has a url, link to it
-  if (link != ""){
-    var desc = "<strong><a href='" + link + 
-    "'/>" + name + "</a></strong><br/> " 
-  }
-  else {
-    desc = "<strong>" + name +
-     "</a></strong><br/> "; 
-  } 
-  //build the direction link
-  address_dir = "<a href='https://www.google.com/maps?saddr=My+Location" +
-  "&daddr=" + address + "'>" + address + '</a><br/>';
-
-  //put the info together in an infowindow   
-  var infoWindow = new google.maps.InfoWindow({
-    content: desc  + address_dir + articlesToPrint
-  });
-
-  //make marker for each location
-  var marker;
-   var marker = new google.maps.Marker({
-    position: latLng,
-    map: map,
-  });
-  markers.push(marker); 
-
-  /*check to see if the location is current.
-  if so, open the info window*/
-  if(ko.toJSON(location.current) == "true"){
-    infoWindow.open(marker.get('map'), marker);
-  }
-  
-  /*if someone clicks on the map itself,
-  open infowindow as well*/
-  marker.addListener('click', function(){
-    infoWindow.open(marker.get('map'), marker);
-  });
-  
-} 
 
 /*get rid of all markers - 
-needed to refresh map with changes from user*/
+needed to refresh map with changes from user
 function clearMarkers() {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
   markers = [];
+}
+*/
+function googleError() {
+  alert("there was an error");
 }
 
 
@@ -459,5 +369,6 @@ function clearMarkers() {
 var vm = new ViewModel();
   ko.applyBindings(vm);
 
-var markers = []; 
+ 
 
+}

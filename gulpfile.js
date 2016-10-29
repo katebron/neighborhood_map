@@ -2,6 +2,7 @@ var gulp = require('gulp');
   browserSync = require('browser-sync').create();
   sass        = require('gulp-sass');
   var webserver = require('gulp-webserver');
+  var jsdoc = require('gulp-jsdoc3');  
  
 
 // Static Server + watching scss/html files
@@ -30,6 +31,11 @@ gulp.task('webserver', function() {
       directoryListing: true,
       open: true
     }));
+});
+
+gulp.task('doc', function (cb) {
+    gulp.src(['README.md', './src/**/*.js'], {read: false})
+        .pipe(jsdoc(cb));
 });
 
 gulp.task('default', ['serve']);
