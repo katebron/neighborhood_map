@@ -219,7 +219,8 @@ var ViewModel = function() {
   
   /** build empty observable arrays to fill later */
   self.locationList = ko.observableArray([]);
-  //self.images = ko.observableArray([]);
+  self.images = ko.observableArray([]);
+  var infowindow = null;
   
   /** this variable will be used in the search */
   self.query = ko.observable('');
@@ -270,17 +271,27 @@ var ViewModel = function() {
   /** when a location is clicked on in the UI */
   this.setCurrentLocation = function(clickedLocation) {
     /** make sure other current location is not set to show as well in map */
+   if (infowindow) {
+        infowindow.close();
+    }
+    infowindow = new google.maps.InfoWindow({
+          content: self.currentLocation().infoW()
+        });
+
     self.currentLocation().current(false);
     if (self.currentLocation().showInfo(true)){
       self.currentLocation().showInfo(false);
+
     }
     
     /** set the new current location */
     self.currentLocation(clickedLocation);
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
-
-   
+    //console.log(self.currentLocation().infoW())
+    
+    console.log("this is " + self.currentLocation().marker);
+    infowindow.open(map, self.currentLocation().marker);
     /** run the function to put markers on the google map */
     //place_markers();
   }
@@ -288,7 +299,32 @@ var ViewModel = function() {
     
   }
   
-  
+  //function to get images that have been taken around the lat/long of current location
+  this.getImages = ko.computed(function(clickedLocation) {
+   self.images.removeAll();
+   var lat = self.currentLocation().latitude;
+   var long = self.currentLocation().longitude;   
+   var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
+   var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' +
+    flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page'+
+    '=0&per_page=5&format=json&nojsoncallback=1';
+   /*grab a page of images from flickr. for each image, build up a 
+   url for an img src, then push that to the observable images array*/
+   $.ajax({
+    type: "GET",
+    url: flickr_url})
+    .done (function(data){
+      $(data.photos.photo).each(function(i,item){
+      src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id 
+        +"_"+ item.secret +"_m.jpg";
+      self.images.push(src);
+      });
+    })  
+    .fail (function(error){
+      $('#photos').append("<em>Temporarily unable to pull from the flickr API</em>");
+    });
+  })
+
   /** show the list of locations on the UI */
   this.locationsToShow = ko.pureComputed(function() {
     /** begin a new empty array to help filter locations */
