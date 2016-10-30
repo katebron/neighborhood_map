@@ -161,7 +161,7 @@ initialLocations = [
     address: '333 NW 13th Ave, Portland OR 97209',
     description: 'Jess pick: even if not on your bday,' +
       ' i\'d like to go here one night',
-    url: 'http://www.tastynalder.com/',
+    url: 'http://www.mediterraneanexplorationcompany.com/',
     genre: 'food',
     latitude: 45.521341,
     longitude: -122.683477,
@@ -200,18 +200,52 @@ var Location = function(data) {
   this.current = ko.observable(data.current);
   this.showInfo = ko.observable(data.showInfo);
   this.showSvg = ko.observable(false);
-  this.neighborhoodArticles = ko.observableArray([]);
+  //this.neighborhoodArticles = ko.observableArray([]);
   this.latLng = {lat: data.latitude, lng: data.longitude};
   this.marker = new google.maps.Marker({
     position: this.latLng,
     map: map,
   });
+  
+
 
     markers.push(this.marker); 
-  this.infoW = ko.observable('Pending search...');
+  this.infoW = ko.observable(data.title);
   
 }
 
+Location.prototype.ajax = function() {
+  var self = this;
+  var articles = [];
+  var title_url = "<a href='" + self.url + "'/>" + self.title + 
+    "</a><br/>";
+  var address_dir = "<a href='https://www.google.com/maps?saddr=My+Location" +
+  "&daddr=" + self.address + "'>" + self.address + '</a><br/>';
+  var heading = title_url + address_dir + "<p><strong>Wiki articles from this area</strong><br/>";
+  var links = "";
+  var url = 'https://en.wikipedia.org/w/api.php?format=json'
+   + '&action=query&list=geosearch&gsradius=10000&gscoord='
+   + self.latitude + '|' + self.longitude;
+   // console.log("this is url: " + url);
+    //begin building link to wiki pages
+    var wiki_1 = 'http://en.wikipedia.org/?curid=';
+    $.ajax({
+      type: "GET",
+      url: url,
+      dataType: "jsonp"
+      })
+      .done(function(data){
+        $(data.query.geosearch).each(function(i, item){
+       
+         links = links + "<a href='" + wiki_1+item.pageid + "'>" + item.title +  "</a></br>";
+        });
+        self.infoW(heading + links + "</p>");
+      })    
+      .fail (function(error){});
+          
+        /*self.infoW(res[0]); /* of course it's not res[0], you have to parse the response */ //})
+  //.fail(/* you can handle the errors here */);
+};
 
 
 var ViewModel = function() {
@@ -268,24 +302,25 @@ var ViewModel = function() {
   self.currentLocation = ko.observable(this.locationList()[0]);
   self.typeToShow = ko.observable("all");
     
+ 
   /** when a location is clicked on in the UI */
   this.setCurrentLocation = function(clickedLocation) {
     /** make sure other current location is not set to show as well in map */
    if (infowindow) {
         infowindow.close();
     }
-    infowindow = new google.maps.InfoWindow({
-          content: self.currentLocation().infoW()
-        });
+    
 
     self.currentLocation().current(false);
     if (self.currentLocation().showInfo(true)){
       self.currentLocation().showInfo(false);
-
     }
     
     /** set the new current location */
     self.currentLocation(clickedLocation);
+    infowindow = new google.maps.InfoWindow({
+          content: self.currentLocation().infoW()
+        });
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
     //console.log(self.currentLocation().infoW())
@@ -324,14 +359,17 @@ var ViewModel = function() {
       $('#photos').append("<em>Temporarily unable to pull from the flickr API</em>");
     });
   })
-
+  //this.location.infoW.subscribe(function(newValue) {
+  // this function will be called each time the value of infoW changed
+    //infoWindow.setContent(newValue);
+  //});
   /** show the list of locations on the UI */
   this.locationsToShow = ko.pureComputed(function() {
     /** begin a new empty array to help filter locations */
     //var locations = ko.observableArray();
 
     locations = this.locationList();
-
+          
     /** first set all to false, then
      after filtering locations, set to true */
     locations.forEach(function(location) {
@@ -356,6 +394,7 @@ var ViewModel = function() {
     } 
     locations.forEach(function(location){
       location.marker.setVisible(true);
+      location.ajax();
     })
     /** grab neighborhood data (just the name, for now) for each location */
     
@@ -398,6 +437,7 @@ function clearMarkers() {
 function googleError() {
   alert("there was an error");
 }
+
 
 
 
