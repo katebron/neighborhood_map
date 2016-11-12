@@ -12,6 +12,9 @@ function mapApp() {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 12
   });
+  google.maps.event.addDomListener(map, 'click', function() {
+          window.alert('Map was clicked!');
+        });
   //set up the initial markers on the map.
   //place_markers();
  var markers = [];
@@ -206,13 +209,15 @@ var Location = function(data) {
     position: this.latLng,
     map: map,
   });
-  
+  this.marker.addListener('click', function(){
+    infoWindow.open(marker.get('map'), marker);
+  });
 
-
-    markers.push(this.marker); 
+  markers.push(this.marker); 
   this.infoW = ko.observable(data.title);
   
 }
+
 
 Location.prototype.ajax = function() {
   var self = this;
@@ -297,7 +302,7 @@ var ViewModel = function() {
 
   }, this);
      
-
+  
   /** defaults for page first loading */
   self.currentLocation = ko.observable(this.locationList()[0]);
   self.typeToShow = ko.observable("all");
@@ -324,8 +329,11 @@ var ViewModel = function() {
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
     //console.log(self.currentLocation().infoW())
-    
-    console.log("this is " + self.currentLocation().marker);
+    self.currentLocation().infoW.subscribe(function(newValue) {
+      // this function will be called each time the value of infoW changed
+        //console.log("this is newVAlue " + newValue);
+        infowindow.setContent(newValue);
+    });
     infowindow.open(map, self.currentLocation().marker);
     /** run the function to put markers on the google map */
     //place_markers();
@@ -359,10 +367,7 @@ var ViewModel = function() {
       $('#photos').append("<em>Temporarily unable to pull from the flickr API</em>");
     });
   })
-  //this.location.infoW.subscribe(function(newValue) {
-  // this function will be called each time the value of infoW changed
-    //infoWindow.setContent(newValue);
-  //});
+ 
   /** show the list of locations on the UI */
   this.locationsToShow = ko.pureComputed(function() {
     /** begin a new empty array to help filter locations */
@@ -374,6 +379,7 @@ var ViewModel = function() {
      after filtering locations, set to true */
     locations.forEach(function(location) {
       location.marker.setVisible(false);
+
     });
 
    /** get search term from UI */
@@ -396,7 +402,7 @@ var ViewModel = function() {
       location.marker.setVisible(true);
       location.ajax();
     })
-    /** grab neighborhood data (just the name, for now) for each location */
+    
     
     /** return filtered list of locations */
     return locations;
@@ -409,6 +415,7 @@ var ViewModel = function() {
     //place_markers();
   }); 
   console.log("this is markers " + markers);
+  
 }
 
 
@@ -444,7 +451,5 @@ function googleError() {
 
 var vm = new ViewModel();
   ko.applyBindings(vm);
-
- 
-
 }
+
