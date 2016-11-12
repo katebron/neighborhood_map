@@ -209,9 +209,6 @@ var Location = function(data) {
     position: this.latLng,
     map: map,
   });
-  this.marker.addListener('click', function(){
-    infoWindow.open(marker.get('map'), marker);
-  });
 
   markers.push(this.marker); 
   this.infoW = ko.observable(data.title);
@@ -245,6 +242,9 @@ Location.prototype.ajax = function() {
          links = links + "<a href='" + wiki_1+item.pageid + "'>" + item.title +  "</a></br>";
         });
         self.infoW(heading + links + "</p>");
+        infowindow.setContent(heading + links + "</p>");
+        infowindow.open(map, self.marker);
+         
       })    
       .fail (function(error){});
           
@@ -259,7 +259,7 @@ var ViewModel = function() {
   /** build empty observable arrays to fill later */
   self.locationList = ko.observableArray([]);
   self.images = ko.observableArray([]);
-  var infowindow = null;
+  infowindow = new google.maps.InfoWindow({});
   
   /** this variable will be used in the search */
   self.query = ko.observable('');
@@ -312,7 +312,7 @@ var ViewModel = function() {
   this.setCurrentLocation = function(clickedLocation) {
     /** make sure other current location is not set to show as well in map */
    if (infowindow) {
-        infowindow.close();
+      infowindow.close();
     }
     
 
@@ -323,18 +323,19 @@ var ViewModel = function() {
     
     /** set the new current location */
     self.currentLocation(clickedLocation);
-    infowindow = new google.maps.InfoWindow({
-          content: self.currentLocation().infoW()
-        });
+    
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
     //console.log(self.currentLocation().infoW())
-    self.currentLocation().infoW.subscribe(function(newValue) {
+    //self.currentLocation().infoW.subscribe(function(newValue) {
       // this function will be called each time the value of infoW changed
         //console.log("this is newVAlue " + newValue);
-        infowindow.setContent(newValue);
-    });
-    infowindow.open(map, self.currentLocation().marker);
+      //  infowindow.setContent(newValue);
+    //});
+    self.currentLocation().ajax();
+    //infowindow.setContent(self.currentLocation().infoW());
+    
+    //infowindow.open(map, self.currentLocation().marker);
     /** run the function to put markers on the google map */
     //place_markers();
   }
@@ -400,7 +401,17 @@ var ViewModel = function() {
     } 
     locations.forEach(function(location){
       location.marker.setVisible(true);
-      location.ajax();
+      location.marker.addListener('click', function(){
+    //infowindow.close();
+       location.current(true);
+       location.showInfo(true);
+       location.ajax();
+       console.log("this is infoW inside gmap listener fx: " + location.infoW());
+       //infowindow.setContent(location.infoW());
+       infowindow.open(map, location.marker);
+       
+    });
+      //location.ajax();
     })
     
     
