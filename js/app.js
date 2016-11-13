@@ -12,14 +12,12 @@ function mapApp() {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 12
   });
-  google.maps.event.addDomListener(map, 'click', function() {
-          window.alert('Map was clicked!');
-        });
+ 
   //set up the initial markers on the map.
   //place_markers();
  var markers = [];
  var initialLocations = [];
-initialLocations = [
+ initialLocations = [
 
 {
     title: 'Hollywood Theatre',
@@ -203,7 +201,6 @@ var Location = function(data) {
   this.current = ko.observable(data.current);
   this.showInfo = ko.observable(data.showInfo);
   this.showSvg = ko.observable(false);
-  //this.neighborhoodArticles = ko.observableArray([]);
   this.latLng = {lat: data.latitude, lng: data.longitude};
   this.marker = new google.maps.Marker({
     position: this.latLng,
@@ -219,11 +216,11 @@ var Location = function(data) {
 Location.prototype.ajax = function() {
   var self = this;
   var articles = [];
-  var title_url = "<a href='" + self.url + "'/>" + self.title + 
-    "</a><br/>";
+  var title_url = "<strong><a href='" + self.url + "'/>" + self.title + 
+    "</a></strong><br/>";
   var address_dir = "<a href='https://www.google.com/maps?saddr=My+Location" +
   "&daddr=" + self.address + "'>" + self.address + '</a><br/>';
-  var heading = title_url + address_dir + "<p><strong>Wiki articles from this area</strong><br/>";
+  var heading = title_url + address_dir + "<p><strong>Wiki articles from this area</strong><br/>" ;
   var links = "";
   var url = 'https://en.wikipedia.org/w/api.php?format=json'
    + '&action=query&list=geosearch&gsradius=10000&gscoord='
@@ -246,10 +243,12 @@ Location.prototype.ajax = function() {
         infowindow.open(map, self.marker);
          
       })    
-      .fail (function(error){});
-          
-        /*self.infoW(res[0]); /* of course it's not res[0], you have to parse the response */ //})
-  //.fail(/* you can handle the errors here */);
+      .fail (function(error){
+         infowindow.setContent(heading + "no wiki articles at this time");
+      }); 
+       
+        infowindow.open(map, self.marker);
+
 };
 
 
@@ -402,31 +401,17 @@ var ViewModel = function() {
     locations.forEach(function(location){
       location.marker.setVisible(true);
       location.marker.addListener('click', function(){
-    //infowindow.close();
-       location.current(true);
-       location.showInfo(true);
-       location.ajax();
-       console.log("this is infoW inside gmap listener fx: " + location.infoW());
-       //infowindow.setContent(location.infoW());
-       infowindow.open(map, location.marker);
-       
+      location.current(true);
+      location.showInfo(true);
+      location.ajax();
+      infowindow.open(map, location.marker);
     });
-      //location.ajax();
-    })
-    
-    
+  })
+
     /** return filtered list of locations */
     return locations;
   }, this);  
 
-
-  /** this subscriber function will alert place_markers, and with it,
-  google maps, whenever the filtered list of locations to show changes */
-  this.locationsToShow.subscribe(function( ) {
-    //place_markers();
-  }); 
-  console.log("this is markers " + markers);
-  
 }
 
 
