@@ -326,11 +326,11 @@ var ViewModel = function() {
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
     //console.log(self.currentLocation().infoW())
-    //self.currentLocation().infoW.subscribe(function(newValue) {
+    self.currentLocation().infoW.subscribe(function(newValue) {
       // this function will be called each time the value of infoW changed
-        //console.log("this is newVAlue " + newValue);
-      //  infowindow.setContent(newValue);
-    //});
+      //console.log("this is newVAlue " + newValue);
+      infowindow.setContent(newValue);
+    });
     self.currentLocation().ajax();
     //infowindow.setContent(self.currentLocation().infoW());
     
