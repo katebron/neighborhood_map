@@ -205,6 +205,7 @@ var Location = function(data) {
   this.marker = new google.maps.Marker({
     position: this.latLng,
     map: map,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
   });
 
   markers.push(this.marker); 
@@ -241,7 +242,7 @@ Location.prototype.ajax = function() {
         self.infoW(heading + links + "</p>");
         infowindow.setContent(heading + links + "</p>");
         infowindow.open(map, self.marker);
-         
+        self.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
       })    
       .fail (function(error){
          infowindow.setContent(heading + "no wiki articles at this time");
@@ -310,33 +311,23 @@ var ViewModel = function() {
   /** when a location is clicked on in the UI */
   this.setCurrentLocation = function(clickedLocation) {
     /** make sure other current location is not set to show as well in map */
-   if (infowindow) {
+    if (infowindow) {
       infowindow.close();
     }
-    
-
-    self.currentLocation().current(false);
-    if (self.currentLocation().showInfo(true)){
-      self.currentLocation().showInfo(false);
-    }
-    
     /** set the new current location */
     self.currentLocation(clickedLocation);
+    reset_markers();
+    
     
     self.currentLocation().current(true);
     self.currentLocation().showInfo(true);
-    //console.log(self.currentLocation().infoW())
+
     self.currentLocation().infoW.subscribe(function(newValue) {
       // this function will be called each time the value of infoW changed
-      //console.log("this is newVAlue " + newValue);
       infowindow.setContent(newValue);
     });
     self.currentLocation().ajax();
-    //infowindow.setContent(self.currentLocation().infoW());
     
-    //infowindow.open(map, self.currentLocation().marker);
-    /** run the function to put markers on the google map */
-    //place_markers();
   }
   this.hideInfo = function(){
     
@@ -371,15 +362,12 @@ var ViewModel = function() {
   /** show the list of locations on the UI */
   this.locationsToShow = ko.pureComputed(function() {
     /** begin a new empty array to help filter locations */
-    //var locations = ko.observableArray();
-
     locations = this.locationList();
           
     /** first set all to false, then
      after filtering locations, set to true */
     locations.forEach(function(location) {
       location.marker.setVisible(false);
-
     });
 
    /** get search term from UI */
@@ -399,28 +387,38 @@ var ViewModel = function() {
       });
     } 
     locations.forEach(function(location){
-    
       location.marker.setVisible(true);
+
+      /** when a maker is clicked on in google maps */
       location.marker.addListener('click', function(){
-        locations.forEach(function(location){
-          location.showInfo(false);
-        })
+        reset_markers();
         self.currentLocation(location);
         location.current(true);
         location.showInfo(true);
         location.ajax();
-        infowindow.open(map, location.marker);
     });
+     
   })
+   
+
 
     /** return filtered list of locations */
     return locations;
   }, this);  
 
+
+
 }
 
-
-
+ 
+function reset_markers(){
+  all = vm.locationList();
+  all.forEach(function(location) {
+    location.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+    location.current(false);
+    location.showInfo(false);
+  });
+}
 /** error message if google maps doesn't load in a certain amount of time */
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
