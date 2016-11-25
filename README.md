@@ -23,4 +23,4 @@ To run this locally, open index.html with a web browser
 
 ### Further documentation
 
-See [Global documentation](out/global.html)
+See [Global documentation](https://katebron.github.io/neighborhood_map/out/index.html)
