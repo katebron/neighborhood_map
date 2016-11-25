@@ -1,5 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app.js</title>
 
-/** locations to show in map & UI */
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/** locations to show in map &amp; UI */
 
 /* jshint strict: true */
 /*global ko*/
@@ -8,16 +36,16 @@ function mapApp() {
   var infowindow, locations, alert;
 
 
-  /** set the map in portland with this lat/lang */
+  //set the map in portland with this lat/lang
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 12
   });
-  /** create some empty arrays to use later */
+ 
+  //set up the initial markers on the map.
+  //place_markers();
   var markers = [];
   var initialLocations = [];
-
-  /** data for initial locations */
   initialLocations = [
     {
       title: 'Hollywood Theatre',
@@ -31,7 +59,7 @@ function mapApp() {
     {
       title: 'Pine Street Market',
       address: '126 SW 2nd Ave, Portland, OR 97204',
-      description: 'Food hall including Salt & Straw\'s whiz bang soft serve bar',
+      description: 'Food hall including Salt &amp; Straw\'s whiz bang soft serve bar',
       url: 'https://www.airbnb.com',
       latitude: 45.521455,
       longitude: -122.672336,
@@ -39,7 +67,7 @@ function mapApp() {
     },
 
     {
-      title: 'Air b&b',
+      title: 'Air b&amp;b',
       address: '745 NE Sumner St, Portland OR 97211',
       description: 'Our backyard',
       url: 'https://pinestreetmarket.squarespace.com/tenants',
@@ -180,7 +208,7 @@ function mapApp() {
       title: 'Longfellows',
       address: '1401 SE Division St, Portland, OR 97202',
       description: "Mainstay for classic titles, first editions, fine bindings," +
-        " rare periodicals, posters & ephemera.",
+        " rare periodicals, posters &amp; ephemera.",
       url: 'http://www.saucebox.com/',
       genre: 'bookstore',
       latitude: 45.505030,
@@ -216,17 +244,18 @@ function mapApp() {
     this.infoW = ko.observable(data.title);
   };
 
-  /** pull in info from wikipedia api and build list of article links */
+
   Location.prototype.ajax = function() {
-    var self = this; 
-    var title_url = "<strong><a href='" + self.url + "'/>" + self.title + 
-      "</a></strong><br/>";
-    var address_dir = "<a href='https://www.google.com/maps?saddr=My+Location" +
-      "&daddr=" + self.address + "'>" + self.address + '</a><br/>';
-    var heading = title_url + address_dir + "<p><strong>Wiki articles from this area</strong><br/>" ;
+    var self = this;
+  
+    var title_url = "&lt;strong>&lt;a href='" + self.url + "'/>" + self.title + 
+      "&lt;/a>&lt;/strong>&lt;br/>";
+    var address_dir = "&lt;a href='https://www.google.com/maps?saddr=My+Location" +
+      "&amp;daddr=" + self.address + "'>" + self.address + '&lt;/a>&lt;br/>';
+    var heading = title_url + address_dir + "&lt;p>&lt;strong>Wiki articles from this area&lt;/strong>&lt;br/>" ;
     var links = "";
     var url = 'https://en.wikipedia.org/w/api.php?format=json' +
-      '&action=query&list=geosearch&gsradius=10000&gscoord=' +
+      '&amp;action=query&amp;list=geosearch&amp;gsradius=10000&amp;gscoord=' +
       self.latitude + '|' + self.longitude;
      
     /** begin building link to wiki pages */
@@ -238,11 +267,11 @@ function mapApp() {
       })
       .done(function(data){
         $(data.query.geosearch).each(function(i, item){
-          links = links + "<a href='" + wiki_1+item.pageid + "'>" + item.title +  "</a></br>";
+       
+        links = links + "&lt;a href='" + wiki_1+item.pageid + "'>" + item.title +  "&lt;/a>&lt;/br>";
         });
-        self.infoW(heading + links + "</p>");
-        infowindow.setContent(heading + links + "</p>");
-        /** open info window & set marker color to active blue */
+        self.infoW(heading + links + "&lt;/p>");
+        infowindow.setContent(heading + links + "&lt;/p>");
         infowindow.open(map, self.marker);
         self.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
       })    
@@ -251,7 +280,6 @@ function mapApp() {
       }); 
       infowindow.open(map, self.marker);
     };
-  
   var ViewModel = function() {
     var self = this;
     /** build empty observable arrays to fill later */
@@ -321,16 +349,16 @@ function mapApp() {
     this.hideInfo = function(){    
   };
   
-  /** function to get images that have been taken around the lat/long of current location */
+  //function to get images that have been taken around the lat/long of current location
   this.getImages = ko.computed(function() {
     self.images.removeAll();
     var lat = self.currentLocation().latitude;
     var long = self.currentLocation().longitude;   
     var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
-    var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' +
-    flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page'+
-    '=0&per_page=5&format=json&nojsoncallback=1';
-    /** grab a page of images from flickr. for each image, build up a 
+    var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&amp;api_key=' +
+    flickr_key + '&amp;lat=' + lat + '&amp;lon=' + long + '&amp;radius=1&amp;page'+
+    '=0&amp;per_page=5&amp;format=json&amp;nojsoncallback=1';
+    /*grab a page of images from flickr. for each image, build up a 
     url for an img src, then push that to the observable images array*/
     $.ajax({
       type: "GET",
@@ -343,7 +371,7 @@ function mapApp() {
         });
       })  
       .fail (function(){
-        $('#flickr_imgs').append("<em>Temporarily unable to pull from the flickr API</em>");
+        $('#flickr_imgs').append("&lt;em>Temporarily unable to pull from the flickr API&lt;/em>");
       });
     });
  
@@ -366,14 +394,14 @@ function mapApp() {
     }
     /** get proper genre to show from radio buttons on UI. filter based on that */
     var desiredType = this.typeToShow();
-    if (desiredType && desiredType != 'all'){
+    if (desiredType &amp;&amp; desiredType != 'all'){
       locations =  ko.utils.arrayFilter(locations, function(locale) {
         return locale.genre === desiredType;
       });
     } 
-
     locations.forEach(function(location){
       location.marker.setVisible(true);
+
       /** when a maker is clicked on in google maps */
       location.marker.addListener('click', function(){
         reset_markers();
@@ -388,7 +416,7 @@ function mapApp() {
   }, this);  
 };
 
-/** close info descriptions and put marker color back to default red */ 
+ 
 function reset_markers(){
   var all = vm.locationList();
   all.forEach(function(location) {
@@ -400,8 +428,8 @@ function reset_markers(){
 /** error message if google maps doesn't load in a certain amount of time */
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
-    $('#map').html('<span class="error">Our apologies, Google Maps isn\'t' +
-       'working at the moment for us</span>');
+    $('#map').html('&lt;span class="error">Our apologies, Google Maps isn\'t' +
+       'working at the moment for us&lt;/span>');
   }
 }, 1000);
 
@@ -409,3 +437,26 @@ var vm = new ViewModel();
   ko.applyBindings(vm);
 }
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="mapApp-Location.html">Location</a></li></ul><h3>Global</h3><ul><li><a href="global.html#mapApp">mapApp</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Fri Nov 25 2016 14:52:24 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
