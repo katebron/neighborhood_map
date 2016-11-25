@@ -399,8 +399,10 @@ var ViewModel = function() {
       });
     } 
     locations.forEach(function(location){
+
       location.marker.setVisible(true);
       location.marker.addListener('click', function(){
+      self.currentLocation(location);
       location.current(true);
       location.showInfo(true);
       location.ajax();
