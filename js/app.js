@@ -5,10 +5,11 @@
 /*global ko*/
 function mapApp() {
   //'use strict';
+  var infowindow, locations, alert;
 
 
   //set the map in portland with this lat/lang
-  map = new google.maps.Map(document.getElementById('map'), {
+  var map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 12
   });
@@ -211,21 +212,21 @@ var Location = function(data) {
   markers.push(this.marker); 
   this.infoW = ko.observable(data.title);
   
-}
+};
 
 
 Location.prototype.ajax = function() {
   var self = this;
-  var articles = [];
+  
   var title_url = "<strong><a href='" + self.url + "'/>" + self.title + 
     "</a></strong><br/>";
   var address_dir = "<a href='https://www.google.com/maps?saddr=My+Location" +
   "&daddr=" + self.address + "'>" + self.address + '</a><br/>';
   var heading = title_url + address_dir + "<p><strong>Wiki articles from this area</strong><br/>" ;
   var links = "";
-  var url = 'https://en.wikipedia.org/w/api.php?format=json'
-   + '&action=query&list=geosearch&gsradius=10000&gscoord='
-   + self.latitude + '|' + self.longitude;
+  var url = 'https://en.wikipedia.org/w/api.php?format=json' +
+   '&action=query&list=geosearch&gsradius=10000&gscoord=' +
+   self.latitude + '|' + self.longitude;
    // console.log("this is url: " + url);
     //begin building link to wiki pages
     var wiki_1 = 'http://en.wikipedia.org/?curid=';
@@ -244,7 +245,7 @@ Location.prototype.ajax = function() {
         infowindow.open(map, self.marker);
         self.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
       })    
-      .fail (function(error){
+      .fail (function(){
          infowindow.setContent(heading + "no wiki articles at this time");
       }); 
        
@@ -328,13 +329,13 @@ var ViewModel = function() {
     });
     self.currentLocation().ajax();
     
-  }
+  };
   this.hideInfo = function(){
     
-  }
+  };
   
   //function to get images that have been taken around the lat/long of current location
-  this.getImages = ko.computed(function(clickedLocation) {
+  this.getImages = ko.computed(function() {
    self.images.removeAll();
    var lat = self.currentLocation().latitude;
    var long = self.currentLocation().longitude;   
@@ -349,15 +350,16 @@ var ViewModel = function() {
     url: flickr_url})
     .done (function(data){
       $(data.photos.photo).each(function(i,item){
-      src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +"/"+ item.id 
-        +"_"+ item.secret +"_m.jpg";
+      var src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +
+      "/"+ item.id +"_"+ item.secret +"_m.jpg";
       self.images.push(src);
       });
     })  
-    .fail (function(error){
-      $('#photos').append("<em>Temporarily unable to pull from the flickr API</em>");
+    .fail (function(){
+      $('#flickr_imgs').append("<em>Temporarily unable to pull from the flickr API</em>");
+      
     });
-  })
+  });
  
   /** show the list of locations on the UI */
   this.locationsToShow = ko.pureComputed(function() {
@@ -398,7 +400,7 @@ var ViewModel = function() {
         location.ajax();
     });
      
-  })
+  });
    
 
 
@@ -408,11 +410,11 @@ var ViewModel = function() {
 
 
 
-}
+};
 
  
 function reset_markers(){
-  all = vm.locationList();
+  var all = vm.locationList();
   all.forEach(function(location) {
     location.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
     location.current(false);
@@ -422,8 +424,8 @@ function reset_markers(){
 /** error message if google maps doesn't load in a certain amount of time */
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
-    $('#map').html('<span class="error">Our apologies, Google Maps isn\'t\
-       working at the moment for us</span>');
+    $('#map').html('<span class="error">Our apologies, Google Maps isn\'t' +
+       'working at the moment for us</span>');
   }
 }, 1000);
 
