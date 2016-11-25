@@ -31,21 +31,25 @@
 
 /* jshint strict: true */
 /*global ko*/
+/**
+ * Function mapApp
+ * @namespace mapApp
+ */
 function mapApp() {
-  //'use strict';
+  
   var infowindow, locations, alert;
 
 
-  //set the map in portland with this lat/lang
+  /** set the map in portland with this lat/lang */
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 45.5231, lng: -122.6765},
     zoom: 12
   });
- 
-  //set up the initial markers on the map.
-  //place_markers();
+  /** create some empty arrays to use later */
   var markers = [];
   var initialLocations = [];
+
+  /** data for initial locations */
   initialLocations = [
     {
       title: 'Hollywood Theatre',
@@ -244,10 +248,12 @@ function mapApp() {
     this.infoW = ko.observable(data.title);
   };
 
-
+ 
+   /**
+   * Pull in info from wikipedia api and build list of article links
+   */
   Location.prototype.ajax = function() {
-    var self = this;
-  
+    var self = this; 
     var title_url = "&lt;strong>&lt;a href='" + self.url + "'/>" + self.title + 
       "&lt;/a>&lt;/strong>&lt;br/>";
     var address_dir = "&lt;a href='https://www.google.com/maps?saddr=My+Location" +
@@ -267,11 +273,11 @@ function mapApp() {
       })
       .done(function(data){
         $(data.query.geosearch).each(function(i, item){
-       
-        links = links + "&lt;a href='" + wiki_1+item.pageid + "'>" + item.title +  "&lt;/a>&lt;/br>";
+          links = links + "&lt;a href='" + wiki_1+item.pageid + "'>" + item.title +  "&lt;/a>&lt;/br>";
         });
         self.infoW(heading + links + "&lt;/p>");
         infowindow.setContent(heading + links + "&lt;/p>");
+        /** open info window &amp; set marker color to active blue */
         infowindow.open(map, self.marker);
         self.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
       })    
@@ -280,6 +286,12 @@ function mapApp() {
       }); 
       infowindow.open(map, self.marker);
     };
+  
+  /**
+   * Function ViewModel
+   * @namespace ViewModel
+   * @memberof mapApp
+   */
   var ViewModel = function() {
     var self = this;
     /** build empty observable arrays to fill later */
@@ -329,7 +341,12 @@ function mapApp() {
     self.currentLocation = ko.observable(this.locationList()[0]);
     self.typeToShow = ko.observable("all");
     
-    /** when a location is clicked on in the UI */
+    
+    /**
+     * Function setCurrentLocation
+     * @memberof mapApp.ViewModel
+     * when a location is clicked on in the UI
+    */
     this.setCurrentLocation = function(clickedLocation) {
       /** make sure other current location is not set to show as well in map */
       if (infowindow) {
@@ -346,24 +363,26 @@ function mapApp() {
       });
       self.currentLocation().ajax();
     };
-    this.hideInfo = function(){    
-  };
-  
-  //function to get images that have been taken around the lat/long of current location
-  this.getImages = ko.computed(function() {
-    self.images.removeAll();
-    var lat = self.currentLocation().latitude;
-    var long = self.currentLocation().longitude;   
-    var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
-    var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&amp;api_key=' +
-    flickr_key + '&amp;lat=' + lat + '&amp;lon=' + long + '&amp;radius=1&amp;page'+
-    '=0&amp;per_page=5&amp;format=json&amp;nojsoncallback=1';
-    /*grab a page of images from flickr. for each image, build up a 
-    url for an img src, then push that to the observable images array*/
-    $.ajax({
-      type: "GET",
-      url: flickr_url})
-      .done (function(data){
+    
+    /**
+     * Function getImages
+     * @memberof mapApp.ViewModel
+     * get images that have been taken around the lat/long of current location
+    */
+    this.getImages = ko.computed(function() {
+      self.images.removeAll();
+      var lat = self.currentLocation().latitude;
+      var long = self.currentLocation().longitude;   
+      var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
+      var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&amp;api_key=' +
+      flickr_key + '&amp;lat=' + lat + '&amp;lon=' + long + '&amp;radius=1&amp;page'+
+      '=0&amp;per_page=5&amp;format=json&amp;nojsoncallback=1';
+      /** grab a page of images from flickr. for each image, build up a 
+        url for an img src, then push that to the observable images array*/
+      $.ajax({
+        type: "GET",
+        url: flickr_url})
+        .done (function(data){
         $(data.photos.photo).each(function(i,item){
           var src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +
           "/"+ item.id +"_"+ item.secret +"_m.jpg";
@@ -374,8 +393,12 @@ function mapApp() {
         $('#flickr_imgs').append("&lt;em>Temporarily unable to pull from the flickr API&lt;/em>");
       });
     });
- 
-    /** show the list of locations on the UI */
+
+    /**
+     * Function locationsToShow
+     * @memberof mapApp.ViewModel
+     * show the list of locations on the UI
+    */
     this.locationsToShow = ko.pureComputed(function() {
       /** begin a new empty array to help filter locations */
       locations = this.locationList();    
@@ -392,6 +415,7 @@ function mapApp() {
           return (locale.title.toLowerCase().indexOf(search) >= 0);
       });
     }
+    
     /** get proper genre to show from radio buttons on UI. filter based on that */
     var desiredType = this.typeToShow();
     if (desiredType &amp;&amp; desiredType != 'all'){
@@ -399,9 +423,9 @@ function mapApp() {
         return locale.genre === desiredType;
       });
     } 
+
     locations.forEach(function(location){
       location.marker.setVisible(true);
-
       /** when a maker is clicked on in google maps */
       location.marker.addListener('click', function(){
         reset_markers();
@@ -411,12 +435,16 @@ function mapApp() {
         location.ajax();
       });
     });
+    
     /** return filtered list of locations */
     return locations;
   }, this);  
 };
 
- 
+/**
+ * Function reset_markers
+ * close info descriptions and put marker color back to default red 
+*/
 function reset_markers(){
   var all = vm.locationList();
   all.forEach(function(location) {
@@ -425,7 +453,11 @@ function reset_markers(){
     location.showInfo(false);
   });
 }
-/** error message if google maps doesn't load in a certain amount of time */
+
+/**
+ * Function setTimeout
+ * error message if google maps doesn't load in a certain amount of time 
+*/
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
     $('#map').html('&lt;span class="error">Our apologies, Google Maps isn\'t' +
@@ -447,13 +479,13 @@ var vm = new ViewModel();
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="mapApp-Location.html">Location</a></li></ul><h3>Global</h3><ul><li><a href="global.html#mapApp">mapApp</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="mapApp-Location.html">Location</a></li></ul><h3>Namespaces</h3><ul><li><a href="mapApp.html">mapApp</a></li><li><a href="mapApp.ViewModel.html">ViewModel</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Fri Nov 25 2016 14:52:24 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Fri Nov 25 2016 15:20:21 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

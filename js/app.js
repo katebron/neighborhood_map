@@ -3,8 +3,12 @@
 
 /* jshint strict: true */
 /*global ko*/
+/**
+ * Function mapApp
+ * @namespace mapApp
+ */
 function mapApp() {
-  //'use strict';
+  
   var infowindow, locations, alert;
 
 
@@ -216,7 +220,10 @@ function mapApp() {
     this.infoW = ko.observable(data.title);
   };
 
-  /** pull in info from wikipedia api and build list of article links */
+ 
+   /**
+   * Pull in info from wikipedia api and build list of article links
+   */
   Location.prototype.ajax = function() {
     var self = this; 
     var title_url = "<strong><a href='" + self.url + "'/>" + self.title + 
@@ -252,6 +259,11 @@ function mapApp() {
       infowindow.open(map, self.marker);
     };
   
+  /**
+   * Function ViewModel
+   * @namespace ViewModel
+   * @memberof mapApp
+   */
   var ViewModel = function() {
     var self = this;
     /** build empty observable arrays to fill later */
@@ -301,7 +313,12 @@ function mapApp() {
     self.currentLocation = ko.observable(this.locationList()[0]);
     self.typeToShow = ko.observable("all");
     
-    /** when a location is clicked on in the UI */
+    
+    /**
+     * Function setCurrentLocation
+     * @memberof mapApp.ViewModel
+     * when a location is clicked on in the UI
+    */
     this.setCurrentLocation = function(clickedLocation) {
       /** make sure other current location is not set to show as well in map */
       if (infowindow) {
@@ -318,24 +335,26 @@ function mapApp() {
       });
       self.currentLocation().ajax();
     };
-    this.hideInfo = function(){    
-  };
-  
-  /** function to get images that have been taken around the lat/long of current location */
-  this.getImages = ko.computed(function() {
-    self.images.removeAll();
-    var lat = self.currentLocation().latitude;
-    var long = self.currentLocation().longitude;   
-    var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
-    var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' +
-    flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page'+
-    '=0&per_page=5&format=json&nojsoncallback=1';
-    /** grab a page of images from flickr. for each image, build up a 
-    url for an img src, then push that to the observable images array*/
-    $.ajax({
-      type: "GET",
-      url: flickr_url})
-      .done (function(data){
+    
+    /**
+     * Function getImages
+     * @memberof mapApp.ViewModel
+     * get images that have been taken around the lat/long of current location
+    */
+    this.getImages = ko.computed(function() {
+      self.images.removeAll();
+      var lat = self.currentLocation().latitude;
+      var long = self.currentLocation().longitude;   
+      var flickr_key = '0ba16f70231cf1f8e6b825dfa87343d2';
+      var flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' +
+      flickr_key + '&lat=' + lat + '&lon=' + long + '&radius=1&page'+
+      '=0&per_page=5&format=json&nojsoncallback=1';
+      /** grab a page of images from flickr. for each image, build up a 
+        url for an img src, then push that to the observable images array*/
+      $.ajax({
+        type: "GET",
+        url: flickr_url})
+        .done (function(data){
         $(data.photos.photo).each(function(i,item){
           var src = "https://farm"+ item.farm +".static.flickr.com/"+ item.server +
           "/"+ item.id +"_"+ item.secret +"_m.jpg";
@@ -346,8 +365,12 @@ function mapApp() {
         $('#flickr_imgs').append("<em>Temporarily unable to pull from the flickr API</em>");
       });
     });
- 
-    /** show the list of locations on the UI */
+
+    /**
+     * Function locationsToShow
+     * @memberof mapApp.ViewModel
+     * show the list of locations on the UI
+    */
     this.locationsToShow = ko.pureComputed(function() {
       /** begin a new empty array to help filter locations */
       locations = this.locationList();    
@@ -364,6 +387,7 @@ function mapApp() {
           return (locale.title.toLowerCase().indexOf(search) >= 0);
       });
     }
+    
     /** get proper genre to show from radio buttons on UI. filter based on that */
     var desiredType = this.typeToShow();
     if (desiredType && desiredType != 'all'){
@@ -383,12 +407,16 @@ function mapApp() {
         location.ajax();
       });
     });
+    
     /** return filtered list of locations */
     return locations;
   }, this);  
 };
 
-/** close info descriptions and put marker color back to default red */ 
+/**
+ * Function reset_markers
+ * close info descriptions and put marker color back to default red 
+*/
 function reset_markers(){
   var all = vm.locationList();
   all.forEach(function(location) {
@@ -397,7 +425,11 @@ function reset_markers(){
     location.showInfo(false);
   });
 }
-/** error message if google maps doesn't load in a certain amount of time */
+
+/**
+ * Function setTimeout
+ * error message if google maps doesn't load in a certain amount of time 
+*/
 setTimeout(function(){
  if(!window.google || !window.google.maps) {
     $('#map').html('<span class="error">Our apologies, Google Maps isn\'t' +

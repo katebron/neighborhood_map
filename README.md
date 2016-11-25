@@ -20,3 +20,7 @@ Built for Udacity's Neighborhood Map Project
 ### Running the project locally
 
 To run this locally, open index.html with a web browser
+
+### Further documentation
+
+See [Global documentation](out/global.html)
