@@ -401,27 +401,6 @@ setTimeout(function(){
   }
 }, 1000);
 
-
-
-
-
-/*get rid of all markers - 
-needed to refresh map with changes from user
-function clearMarkers() {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-  markers = [];
-}
-*/
-function googleError() {
-  alert("We're temporarily experiencing a problem bringing" +
-    "in Google Maps. Please check back later.");
-}
-
-
-
-
 var vm = new ViewModel();
   ko.applyBindings(vm);
 }
