@@ -9,9 +9,22 @@
   "author": "kate bronstad",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.14.0",
+    "browser-sync": "^2.17.5",
     "gulp": "^3.9.1",
+    "gulp-jsdoc3": "^1.0.0",
     "gulp-sass": "^2.3.2",
-    "gulp-webserver": "^0.9.1"
-  }
+    "gulp-webserver": "^0.9.1",
+    "jshint": "^2.9.4"
+  },
+  "dependencies": {
+    "jsdoc": "^3.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katebron/neighborhood_map.git"
+  },
+  "bugs": {
+    "url": "https://github.com/katebron/neighborhood_map/issues"
+  },
+  "homepage": "https://github.com/katebron/neighborhood_map#readme"
 }
