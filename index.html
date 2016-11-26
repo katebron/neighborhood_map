@@ -5,91 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Locations</title>
      <link href="css/styles.css" rel=stylesheet /> 
+     <link rel="shortcut icon" type="image/png" href="pdx.png">
+
 </head>
 <body>
-   
-
-    <div id='main'>
-        
+  <div id='main'>
     <h1>To visit, in Portland.</h1>
-<div id="map"></div>
+     <div id="map"></div>
 
-    <div id="all_locations">
+      <div id="all_locations">
     
-<div id = "filter">
-    <h2>Filter locations by type or name</h2>
-    <p><label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label>
-
- <span class="radio_wrap"><label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' /><span class="icon-spoon-knife"></span> Food</label></span>
-    <span class="radio_wrap"><label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' /><span class="icon-glass2"></span> Bars</label></span>
-    <span class="radio_wrap"><label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' /><span class="icon-quill"></span> Nostalgia</label></span>
-    <span class="radio_wrap"><label><input type='radio' name="genre" value='bookstore' data-bind='checked: typeToShow' /><span class="icon-books"></span> Books</label></span>
-    <span class="radio_wrap"><label><input type='radio' name="genre" value='misc' data-bind='checked: typeToShow' /><span class="icon-magnet"></span> Misc</label></span>
-
-</p>
-<p><label>Find a place by name:</label>
-<input placeholder="Name of location" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off"></p>
-</div>
-
-
-    <ul id="location-list" data-bind="foreach:locationsToShow">
-
-       
-
-
+        <div id = "filter">
+          <h2>Filter locations by type or name</h2>
+          <p><label><input type='radio' name="genre" value='all' data-bind='checked: typeToShow' />All</label>
+          <span class="radio_wrap"><label><input type='radio' name="genre" value='food' data-bind='checked: typeToShow' /><span class="icon-spoon-knife"></span> Food</label></span>
+            <span class="radio_wrap"><label><input type='radio' name="genre" value='bar' data-bind='checked: typeToShow' /><span class="icon-glass2"></span> Bars</label></span>
+            <span class="radio_wrap"><label><input type='radio' name="genre" value='nostalgia' data-bind='checked: typeToShow' /><span class="icon-quill"></span> Nostalgia</label></span>
+            <span class="radio_wrap"><label><input type='radio' name="genre" value='bookstore' data-bind='checked: typeToShow' /><span class="icon-books"></span> Books</label></span>
+            <span class="radio_wrap"><label><input type='radio' name="genre" value='misc' data-bind='checked: typeToShow' /><span class="icon-magnet"></span> Misc</label></span>
+          </p>
+          <p><label>Find a place by name:</label>
+          <input placeholder="Name of location" type="search" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off"></p>
+        </div>
+        <ul id="location-list" data-bind="foreach:locationsToShow">
         <li data-bind="click: $root.setCurrentLocation, $root.getImages"> <span data-bind="css: genreIcon"></span>
-            <span class="loc_title" data-bind="text: title">
+        <span class="loc_title" data-bind="text: title">
         </span> 
-            <div class="loc_info" data-bind="visible: showInfo"><!--<span data-bind="click: $root.hideInfo" class="icon-cancel-circle"></span><span class="not-visible">Close section</span></span>--><em><span data-bind="text: description"></span></em><br/>
-<span data-bind="text: address"></span>
- <!--<div data-bind="foreach: neighborhoodArticles">
-  <!--<a data-bind="text: title, attr: { href: url, title: title }"></a>-->
-<!--</div>-->
-
-       </div>     
-          </div>
+        <div class="loc_info" data-bind="visible: showInfo"><!--<span data-bind="click: $root.hideInfo" class="icon-cancel-circle"></span><span class="not-visible">Close section</span></span>--><em><span data-bind="text: description"></span></em><br/>
+          <span data-bind="text: address"></span>
+        </div>     
+      </div>
         </li>
-    </ul>
-    
-</div>
-    
-    <!--<div id="address" data-bind="with: currentLocation">
-     
-        <span data-bind="text: address"></span> 
-         <!--<ul data-bind="foreach: $root.images">-->
-        
-        
-        <!--</div>-->
-         <div id = "photos" data-bind="with: currentLocation">    
+        </ul>
+    </div>
+    <div id = "photos" data-bind="with: currentLocation">    
         <h2>Flickr photos from around this location</h2>
         <div id = "flickr_imgs" data-bind="foreach:$root.images"> <!---data-bind="foreach: getImages"-->
             
-            <div class="flickr_img_wrap">
-           <img data-bind="attr:{src: $data}" />
-           </div>
-         </div>
-       </div>     
+          <div class="flickr_img_wrap">
+            <img data-bind="attr:{src: $data}" />
           </div>
+        </div>
+       </div>     
+    </div>
         
-    </div><!--end main ui-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    
-    <script>
+  </div><!--end main ui-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="js/lib/knockout-3.4.0.js"></script>
+  <script src="js/app.js"></script>  
+  <script>
     function initializeMap() {
      mapApp();
     }  
     function googleError(){
       $('#map').html('<p>We\'re having a problem pulling in map information. Please check back later!</p>');
     }
-    </script>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTcEzUHMFhYfnezJpRy8RrorPLeG_1lOw&callback=initializeMap"
-    onerror="googleError()"></script>
-    <script src="js/lib/knockout-3.4.0.js"></script>
-    <script src="js/app.js"></script>
-    
-  
-
-
+  </script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTcEzUHMFhYfnezJpRy8RrorPLeG_1lOw&callback=initializeMap"
+    onerror="googleError()">
+  </script>
 </body>
 </html>
 
